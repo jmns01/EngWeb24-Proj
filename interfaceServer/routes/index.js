@@ -5,10 +5,13 @@ var axios = require('axios');
 /* GET home page. */
 router.get('/getInquiricoesList', function(req, res, next) {
   var d = new Date().toISOString().substring(0, 16);
-  axios.get('http://localhost:7777/apiServer/getInquiricoesList')
+  var page = parseInt(req.query.page) || 1;
+  var limit = 250;
+
+  axios.get(`http://localhost:7777/apiServer/getInquiricoesList?page=${page}&limit=${limit}`)
   .then(resp =>{
     var inquiricoes = resp.data;
-    res.status(200).render("inquiricoesList", {title: "Inquirições de Génere", lista: inquiricoes, date: d})
+    res.status(200).render("inquiricoesList", {title: "Registo de Inquirições de Génere", type: "Admin", userName: "jmns", lista: inquiricoes, date: d, page: page})
   })
   .catch(erro => {
     console.log('Erro na listagem de inquiricoes: ' + erro);

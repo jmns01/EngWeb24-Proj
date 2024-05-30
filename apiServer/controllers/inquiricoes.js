@@ -6,3 +6,12 @@ module.exports.list = () => {
         .sort({_id: 1})
         .exec();
 }
+
+module.exports.listPage = (limit, skip) => {
+    return Inquiricao
+        .find()
+        .sort({UnitTitle: 1})
+        .skip(skip)
+        .limit(limit)
+        .exec();
+}

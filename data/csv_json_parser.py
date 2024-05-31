@@ -89,7 +89,7 @@ def write_to_json(json_dic : dict, json_filename : str) -> None:
         json.dump(json_dic, jsonfile, ensure_ascii=False, indent=4)
 
 
-csv_data = read_csv('PT-UM-ADB-DIO-MAB-006.csv')
+csv_data = read_csv('PT-UM-ADB-DIO-MAB-006.CSV')
 id_fixed = switch_id(csv_data)
 types = fix_types(id_fixed)
 relations = make_relations(types)

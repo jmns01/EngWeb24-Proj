@@ -43,7 +43,7 @@ router.post('/register',auth.verificaAcesso,function(req, res) {
                   else{
                     res.status(200).jsonp({message: "Utilizador criado com sucesso!"})
                      passport.authenticate("local")(req,res,function(){
-                      jwt.sign({ username: req.user.username, level: req.user.level, 
+                      jwt.sign({ username: req.user, level: req.user.level, 
                         sub: 'aula de EngWeb2023'}, 
                         "EngWeb2023",
                          {expiresIn: 3600},
@@ -84,7 +84,7 @@ router.post('/login', function(req, res, next) {
       }
 
       jwt.sign(
-        { username: req.user.username, level: req.user.level, sub: 'EngWeb2024' },
+        { username: req.user, level: req.user.level, sub: 'EngWeb2024' },
         'EngWeb2024',
         { expiresIn: 3600 },
         function(e, token) {

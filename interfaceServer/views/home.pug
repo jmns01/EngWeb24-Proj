@@ -1,0 +1,73 @@
+extends layout
+
+block content
+    .w3-card-4
+        header.w3-container.w3-light-blue
+            h1 #[b Inquirição de Génere - Trabalho Prático de EngWeb2024]
+            if u
+                .w3-cell-row.w3-light-blue
+                    .w3-cell
+                        if u != null
+                            h2 Bem-Vindo #{u.name}!
+                        else 
+                            h2 Bem-Vindo!
+                    .w3-cell.w3-border-black.w3-border-top.w3-border-left(style="width:16%") 
+                        if u != null
+                            h3 &nbsp;#[b Nível de Acesso:]  #{u.level}
+                        else
+                            h3 &nbsp;#[b Nível de Acesso:]  Não autenticado
+        .w3-container
+            .w3-cell(style="width:5%;")
+                i.fa.fa-angle-right(style="color: #000000;")
+            .w3-cell(style="width:95%;")
+                h3 &nbsp;&nbsp;&nbsp;Escolha uma opção:
+            ul.w3-ul.w3-card-4
+                li.w3-bar
+                    span
+                        .w3-bar-item
+                            .w3-bar-item
+                                a(href="/getInquiricoesList") 
+                                    span
+                                        .w3-container.w3-cell(style="width:10%; height: 80%")
+                                            i.fa.fa-folder-open(style="color: #000000;")
+                                        .w3-container.w3-cell(style="width:90%; height: 80%")
+                                            .w3-large #[b Lista de Inquirições de Génere]
+                                                h6 Aceda e edite vários registos, assim como as publicações a eles referentes
+                if u.level == "Administrador"
+                    li.w3-bar
+                        span
+                            .w3-bar-item
+                                .w3-bar-item
+                                    a(href="/addAdmin") 
+                                        span
+                                            .w3-container.w3-cell(style="width:10%; height: 80%")
+                                                i.fa.fa-user-plus(style="color: #000000;")
+                                            .w3-container.w3-cell(style="width:90%; height: 80%")
+                                                .w3-large #[b Adicionar Administrador]
+                                                    h6 Adicione um novos perfil de administrador
+                    li.w3-bar
+                        span
+                            .w3-bar-item
+                                .w3-bar-item
+                                    a(href="/gerirContas") 
+                                        span
+                                            .w3-container.w3-cell(style="width:10%; height: 80%")
+                                                i.fa.fa-user-cog(style="color: #000000;")
+                                            .w3-container.w3-cell(style="width:90%; height: 80%")
+                                                .w3-large #[b Gestão de Contas]
+                                                    h6 Edite e/ou remova contas de utilizadores
+                if u != null
+                    li.w3-bar
+                        span
+                            .w3-bar-item
+                                .w3-bar-item
+                                    a(href="/logout") 
+                                        span
+                                            .w3-container.w3-cell(style="width:10%; height: 80%")
+                                                i.fa.fa-sign-out-alt(style="color: #000000;")
+                                            .w3-container.w3-cell(style="width:90%; height: 80%")
+                                                .w3-large #[b Sair]
+                                                    h6 Termine a sessão                                                    
+        footer.w3-container.w3-light-blue.w3-center
+            h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
+            h5 Generado por EngWeb2024 in #{date}

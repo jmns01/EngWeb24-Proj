@@ -4,12 +4,13 @@ var axios = require('axios');
 var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+const { token } = require('morgan');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
 // Configuração do express-session
 router.use(session({
-  secret: 'PGDRE2023',
+  secret: 'EW2024',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // Defina como true se estiver usando HTTPS
@@ -17,7 +18,7 @@ router.use(session({
 
 function verificaToken(req, res, next) {
   if (req.cookies && req.cookies.token) {
-    jwt.verify(req.cookies.token, "PGDRE2023", function (e, payload) {
+    jwt.verify(req.cookies.token, "EW2024", function (e, payload) {
       if (e) {// Erro na validação do token
         res.render('error', { error: "O token do pedido não é válido...", token: false });
       } else { // Só avança se existir um token e se este for verificado com sucesso
@@ -29,6 +30,22 @@ function verificaToken(req, res, next) {
     res.render('error', { error: "O pedido não tem um token...", token: false });
   }
 }
+
+router.get('/home', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  if(req.cookies && req.cookies.token){
+    jwt.verify(req.cookies.token, "EW2024", function(e, payload){
+      if(e){
+        res.status(200).render('home', {d: d, u: null, token: false});
+      }else{
+        console.log("Encontrei")
+        console.log(payload)
+        console.log(payload.username) 
+        res.status(200).render('home', {d: d, u: payload.username, token: true});
+      }
+    });
+  }
+});
 
 /* GET home page. */
 router.get('/getInquiricoesList', function (req, res, next) {
@@ -96,7 +113,7 @@ router.post('/login', function (req, res) {
       const user = response.data;
       if (user && user.password === password) { // Simplificação, use hashing para passwords na prática
         // Criar token e definir cookie
-        const token = jwt.sign({ username: user.username }, 'PGDRE2023');
+        const token = jwt.sign({ username: user }, 'EW2024');
         res.cookie('token', token);
         res.redirect('/getInquiricoesList');
       } else {

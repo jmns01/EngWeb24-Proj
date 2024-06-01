@@ -38,3 +38,8 @@ router.get('/login', function(req, res){
   var data = new Date().toISOString().substring(0,16) 
   res.render('login', {d: data})
 })
+
+router.get('/register', function(req, res){
+  var data = new Date().toISOString().substring(0,16) 
+  res.render('registo', {d: data})
+})

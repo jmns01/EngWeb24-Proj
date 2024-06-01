@@ -6,7 +6,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var mongoose = require('mongoose');
 
 // Configuração do banco de dados
-var mongoDB = 'mongodb://127.0.0.1/inquiricoes';
+var mongoDB = 'mongodb://127.0.0.1:27017/inquiricoes';
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Erro de conexão ao MongoDB...'));

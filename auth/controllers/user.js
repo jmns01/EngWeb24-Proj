@@ -2,7 +2,8 @@ var User = require('../models/user')
 
 
 module.exports.find = function() {
-    return User.find().exec();
+  console.log("Olá mundo\n");
+  return User.find().exec();
 };
   
 module.exports.getUser = function(username) {

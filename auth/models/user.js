@@ -9,8 +9,8 @@ var userSchema = new mongoose.Schema({
     dateCreated: Date, 
     lastAccess: Date, 
     active: Boolean
-})
+},{collection: 'users'})
 
 userSchema.plugin(passportLocalMongoose)
 
-module.exports = mongoose.model('user', userSchema)
+module.exports = mongoose.model('user', userSchema, "users")

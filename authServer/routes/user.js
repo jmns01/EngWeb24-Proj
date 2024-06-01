@@ -84,8 +84,8 @@ router.post('/login', function(req, res, next) {
       }
 
       jwt.sign(
-        { username: req.user.username, level: req.user.level, sub: 'aula de EngWeb2023' },
-        'EngWeb2023',
+        { username: req.user.username, level: req.user.level, sub: 'EngWeb2024' },
+        'EngWeb2024',
         { expiresIn: 3600 },
         function(e, token) {
           if (e) {

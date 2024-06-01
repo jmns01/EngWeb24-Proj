@@ -74,4 +74,12 @@ router.post('/login', function (req, res) {
     });
 });
 
+router.get('/register', function(req, res){
+  var data = new Date().toISOString().substring(0,16) 
+  res.render('registo', {d: data})
+})
+
 module.exports = router;
+
+
+

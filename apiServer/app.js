@@ -4,13 +4,17 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose')
 
-var mongoDB = 'mongodb://127.0.0.1/inquiricoes'
-mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
-var db = mongoose.connection
-db.on('error', console.error.bind(console, 'Erro de conexão ao MongoDB'))
+
+var mongoDB = 'mongodb://127.0.0.1:27017/inquiricoes';
+mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Conexão ao MongoDB realizada com sucesso"))
+  .catch(err => console.error('Erro de conexão ao MongoDB:', err));
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'Erro de conexão ao MongoDB'));
 db.once('open', () => {
-  console.log("Conexão ao MongoDB realizada com sucesso")
-})
+  console.log("Conexão ao MongoDB realizada com sucesso");
+});
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');

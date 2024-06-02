@@ -115,7 +115,7 @@ router.post('/login', function (req, res) {
         // Criar token e definir cookie
         const token = jwt.sign({ username: user }, 'EW2024');
         res.cookie('token', token);
-        res.redirect('/getInquiricoesList');
+        res.redirect('/home');
       } else {
         req.session.error = 'Username ou password incorretos.';
         res.redirect('/login');
@@ -134,6 +134,3 @@ router.get('/register', function(req, res){
 })
 
 module.exports = router;
-
-
-

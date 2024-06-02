@@ -1,0 +1,19 @@
+services:
+  web_database:
+    image: mongo
+    container_name: web_database
+  web_client:
+    build: ./Frontend
+    container_name: web_client
+    ports:
+      - "8888:8888"
+  web_api_server:
+    build: ./Backend
+    container_name: web_api_server
+    ports:
+      - "7777:7777"
+  web_auth_server:
+    build: ./Auth
+    container_name: web_auth_server
+    ports:
+      - "6666:6666"

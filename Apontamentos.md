@@ -27,3 +27,21 @@
 - As relações podem ser IDs mas isso torna o script muito ineficiente (alternativa melhor é usar os nomes e depois pensar no que fazer com as rotas)
 - Ter os ids em relações significa que existem pessoas que, por não terem o seu inquerito na base de dados, não são incluídas nas relações.
 
+# Rotas
+
+## AUTH SERVER
+```
+localhost:27002/login
+localhost:27002/register
+```
+
+## API SERVER
+```
+localhost:27001/inqueritos/*
+localhost:27001/utilizadores/*
+```
+
+## FRONTEND
+```
+localhost:27000/*
+```

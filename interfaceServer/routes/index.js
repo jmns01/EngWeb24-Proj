@@ -133,4 +133,9 @@ router.get('/register', function(req, res){
   res.render('registo', {d: data})
 })
 
+router.get('/logout', function(req, res) {
+  res.clearCookie('token');
+  res.redirect('/login');
+});
+
 module.exports = router;

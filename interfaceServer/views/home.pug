@@ -61,7 +61,7 @@ block content
                         span
                             .w3-bar-item
                                 .w3-bar-item
-                                    a(href="/logout") 
+                                    a(href="javascript:void(0)" onclick="logout()") 
                                         span
                                             .w3-container.w3-cell(style="width:10%; height: 80%")
                                                 i.fa.fa-sign-out-alt(style="color: #000000;")
@@ -71,3 +71,14 @@ block content
         footer.w3-container.w3-light-blue.w3-center
             h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
             h5 Generado por EngWeb2024 in #{date}
+    script.
+      function logout() {
+        fetch('/logout', {
+          method: 'GET',
+          credentials: 'same-origin'
+        }).then(response => {
+          if (response.redirected) {
+            window.location.href = response.url;
+          }
+        });
+      }

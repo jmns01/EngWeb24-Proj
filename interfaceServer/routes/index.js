@@ -5,6 +5,8 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 const { token } = require('morgan');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -98,6 +100,20 @@ router.get('/getInquiricoesList', function (req, res, next) {
   }
 });
 
+router.get('/downloadInquiricoes', function(req, res) {
+  axios.get('http://localhost:7777/getInquiricoesList')
+    .then(response => {
+      const inquiricoes = response.data;
+      res.setHeader('Content-disposition', 'attachment; filename=inquiricoes.json');
+      res.setHeader('Content-type', 'application/json');
+      res.send(JSON.stringify(inquiricoes, null, 2));
+    })
+    .catch(error => {
+      console.error('Erro ao obter inquirições:', error);
+      res.status(500).send('Erro ao obter inquirições');
+    });
+});
+
 router.get('/login', function (req, res) {
   var data = new Date().toISOString().substring(0, 16);
   var error = req.session.error;
@@ -136,6 +152,52 @@ router.get('/register', function(req, res){
 router.get('/logout', function(req, res) {
   res.clearCookie('token');
   res.redirect('/login');
+});
+
+// Rota para carregar a página de adição de inquirições
+router.get('/addInquiricao', verificaToken, function(req, res) {
+  console.log(req.user.username)
+  if (req.user.username.level === 'Produtor') {
+    res.render('addInquiricao');
+  } else {
+    res.status(403).send('Acesso negado');
+  }
+});
+
+// Rota para adicionar inquirições manualmente
+router.post('/addInquiricaoManual', verificaToken, function(req, res) {
+  if (payload.username.level === 'Produtor') {
+    const inquiricao = req.body;
+    axios.post('http://localhost:7777/inquiricoes', inquiricao)
+      .then(() => {
+        res.redirect('/getInquiricoesList');
+      })
+      .catch(error => {
+        console.error('Erro ao adicionar inquirição:', error);
+        res.status(500).send('Erro ao adicionar inquirição');
+      });
+  } else {
+    res.status(403).send('Acesso negado');
+  }
+});
+
+// Rota para adicionar inquirições por ficheiro
+router.post('/addInquiricaoFile', verificaToken, upload.single('inquiricaoFile'), function(req, res) {
+  if (payload.username.level === 'Produtor') {
+    const filePath = req.file.path;
+    const inquiricoes = require(filePath); // Supondo que o ficheiro é um JSON válido
+
+    axios.post('http://localhost:7777/inquiricoes', inquiricoes)
+      .then(() => {
+        res.redirect('/getInquiricoesList');
+      })
+      .catch(error => {
+        console.error('Erro ao adicionar inquirição por ficheiro:', error);
+        res.status(500).send('Erro ao adicionar inquirição por ficheiro');
+      });
+  } else {
+    res.status(403).send('Acesso negado');
+  }
 });
 
 module.exports = router;

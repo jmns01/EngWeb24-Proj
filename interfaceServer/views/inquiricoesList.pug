@@ -40,7 +40,7 @@ block content
                     h6 &nbsp;&nbsp;#[b Sair]
       h3 &nbsp;&nbsp;&nbsp;#[b Registo de Inquirições de Génere]
     .w3-container
-      if type == "Admin"
+      if type == "Admin" || type == "Produtor"
         .w3-bar-item.w3-right(style="display: flex; top:10px; justify-content: space-between; align-items: center;")
           a.w3-button(href="/addInquiricao")
             i.fa.fa-plus(style="color: #000000;")

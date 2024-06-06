@@ -1,4 +1,5 @@
-var Inquiricao = require('../models/inquiricao');
+// No arquivo do controlador (inquiricao.js)
+const Inquiricao = require('../models/inquiricao');
 
 module.exports.list = () => {
     return Inquiricao
@@ -40,5 +41,13 @@ module.exports.listByDate = (date, limit, skip) => {
         .sort({UnitTitle: 1})
         .skip(skip)
         .limit(limit)
+        .exec();
+}
+
+module.exports.findMaxId = () => {
+    return Inquiricao
+        .find({}, { _id: 1 })
+        .sort({ _id: -1 })
+        .limit(1)
         .exec();
 }

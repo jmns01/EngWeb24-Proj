@@ -1,6 +1,6 @@
 import express from 'express'
 import controller from '../controllers/inquiries.js'
-import {verify_token} from '../authorization/auth.js'
+import {verify_token, is_admin} from '../authorization/auth.js'
 
 const router = express.Router();
 
@@ -46,7 +46,7 @@ router.put('/:id', verify_token, (req, res) => {
     .catch(error => res.jsonp(error));
 })
 
-router.delete('/:id', verify_token, (req, res) => {
+router.delete('/:id', is_admin, (req, res) => {
     controller.remove(req.params.id)
     .then(() => res.sendStatus(204))
     .catch(error => res.jsonp(error));

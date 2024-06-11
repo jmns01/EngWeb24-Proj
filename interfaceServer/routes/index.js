@@ -31,6 +31,7 @@ function verificaToken(req, res, next) {
   }
 }
 
+/* GET Página principal */
 router.get('/home', function(req, res){
   var d = new Date().toISOString().substring(0, 16);
   if(req.cookies && req.cookies.token){
@@ -45,9 +46,12 @@ router.get('/home', function(req, res){
       }
     });
   }
+  else{
+    res.status(200).render('home', {d: d, u: null, token: false});
+  }
 });
 
-/* GET home page. */
+/* GET Lista de registos, inclui os filtros e paginação */
 router.get('/getInquiricoesList', function (req, res, next) {
   var d = new Date().toISOString().substring(0, 16);
   var page = parseInt(req.query.page) || 1;
@@ -98,6 +102,25 @@ router.get('/getInquiricoesList', function (req, res, next) {
   }
 });
 
+router.get('/moreOptions', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  if(req.cookies && req.cookies.token){
+    jwt.verify(req.cookies.token, "EW2024", function(e, payload){
+      if(e){
+        res.status(200).render('moreOptions', {d: d, u: null, token: false});
+      }else if(e.level == "Administrador"){
+        console.log("Encontrei")
+        console.log(payload)
+        console.log(payload.username) 
+        res.status(200).render('moreOptions', {d: d, u: payload.username, token: true});
+      }
+    });
+  }
+  else{
+    res.status(200).render('moreOptions', {d: d, u: null, token: false});
+  }
+});
+
 router.get('/login', function (req, res) {
   var data = new Date().toISOString().substring(0, 16);
   var error = req.session.error;
@@ -106,6 +129,28 @@ router.get('/login', function (req, res) {
 });
 
 router.post('/login', function (req, res) {
+  const { username, password } = req.body;
+
+  axios.post(`http://localhost:7778/users/login`, {params: {username: username, password: password}})
+  .then(response => {
+    if(user){
+      const token = jwt.sign({username: user.username}, "EW2024");
+      res.cookie('token', token);
+      res.redirect('/getInquiricoesList');
+    }else{
+      req.session.error = 'Username ou password incorretos.';
+      res.redirect('/login');
+    }
+  })
+  .catch(error => {
+    console.error('Erro ao verificar credenciais:', error);
+    req.session.error = 'Ocorreu um erro. Por favor, tente novamente.';
+    res.redirect('/login');
+  });
+});
+
+
+/*router.post('/login', function (req, res) {
   const { username, password } = req.body;
 
   axios.get(`http://localhost:7778/users/get/${username}`)
@@ -126,12 +171,31 @@ router.post('/login', function (req, res) {
       req.session.error = 'Ocorreu um erro. Por favor, tente novamente.';
       res.redirect('/login');
     });
-});
+});*/
 
 router.get('/register', function(req, res){
   var data = new Date().toISOString().substring(0,16) 
   res.render('registo', {d: data})
 })
+
+router.post('/register', function(req, res){
+  console.log(req.body);
+  const {name, username, password, level} = req.body;
+  axios.post('http://localhost:7778/users/register', {name: name, username: username, password: password, level: level})
+  .then(response => {
+    console.log('Utilizador registado com sucesso');
+    res.redirect('/login');
+  })
+  .catch(error => {
+    console.error('Erro ao registar utilizador:', error);
+    res.redirect('/register');
+  });
+});
+
+router.get('/logout', function(req, res){
+  res.clearCookie('token');
+  res.redirect('/home');
+});
 
 module.exports = router;
 

@@ -3,18 +3,28 @@ extends layout
 block content
     .w3-card-4
         header.w3-container.w3-light-blue
-            h1 #[b Inquirição de Génere - Trabalho Prático de EngWeb2024]
-            .w3-cell-row.w3-light-blue
-                .w3-cell
-                    if u != null
-                        h2 Bem-Vindo #{u.name}!
-                    else 
-                        h2 Bem-Vindo!
-                .w3-cell.w3-border-black.w3-border-top.w3-border-left(style="width:16% white-space: nowrap; max-width: 50px; overflow: hidden;") 
-                    if u != null
-                        h3 &nbsp;#[b Nível de Acesso:]  #{u.level}
-                    else
-                        h3 &nbsp;#[b Nível de Acesso:]  Não autenticado
+            .w3-bar.w3-border-bottom
+                .w3-bar-item 
+                        h1 #[b Inquirição de Génere - Trabalho Prático de EngWeb2024]
+                        .w3-cell-row.w3-light-blue
+                            .w3-cell
+                                if u != null
+                                    h2 Bem-Vindo #{u.name}!
+                                else 
+                                    h2 Bem-Vindo!
+                            .w3-cell.w3-border-black.w3-border-top.w3-border-left(style="width:16% white-space: nowrap; max-width: 50px; overflow: hidden;") 
+                                if u != null
+                                    h3 &nbsp;#[b Nível de Acesso:]  #{u.level}
+                                else
+                                    h3 &nbsp;#[b Nível de Acesso:]  Não autenticado
+                a.w3-bar-item.w3-button(href="/home" style="position:relative; top:10px;")
+                      .w3-cell-row
+                          .w3-cell
+                              i.fa.fa-home(style="color: #000000;")
+                          .w3-cell(style="width:80%")
+                              h6 #[b Início]
+            h3 &nbsp;&nbsp;&nbsp;#[b Opções de Administrador]
+        
         .w3-container
             .w3-cell(style="width:5%;")
                 i.fa.fa-angle-right(style="color: #000000;")
@@ -25,13 +35,13 @@ block content
                     span
                         .w3-bar-item
                             .w3-bar-item
-                                a(href="/getInquiricoesList") 
+                                a(href="/gerirUsers") 
                                     span
                                         .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
                                             i.fa.fa-folder-open(style="color: #000000;")
                                         .w3-container.w3-cell(style="width:90%; height: 80%")
-                                            .w3-large #[b Lista de Inquirições de Génere]
-                                                h6 Aceda e edite vários registos, assim como as publicações a eles referentes
+                                            .w3-large #[b Gestão de Utilizadores]
+                                                h6 Edite e/ou elimine contas de utilizadores
                 if u != null && u.level == "Administrador"
                     li.w3-bar
                         span

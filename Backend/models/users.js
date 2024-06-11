@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const modelSchema = new mongoose.Schema({
-    _id: {type: String, required: true},
+    _id: {type: mongoose.Types.ObjectId, required: true},
     name: {type: String, required: true},
     username: {type: String, required: true},
     password: {type: String, required: true},
@@ -9,6 +9,6 @@ const modelSchema = new mongoose.Schema({
     dateCreated: {type: Date, required: true},
     lastAccess: {type: Date, required: true},
     active: {type: Boolean, required: true}
-}, {collection: 'utilizadores', versionKey: false})
+}, {collection: 'users', versionKey: false})
 
-export default mongoose.model('utilizador', modelSchema)
+export default mongoose.model('user', modelSchema)

@@ -1,4 +1,4 @@
-import model from '../models/inquiricoes.js'
+import model from '../models/inquiries.js'
 
 function read_all(limit, skip){
     return model.find().sort({_id: 1}).skip(skip).limit(limit).exec();

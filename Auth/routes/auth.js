@@ -1,29 +1,22 @@
 import express from 'express'
+import generate_token from '../token/generate.js'
 import controller from '../controllers/auth.js'
-import dotenv from 'dotenv'
-import jwt from 'jsonwebtoken'
-
-dotenv.config()
-
-function generate_access_token(data){
-    return jwt.sign(data, process.env.JWT_SECRET_KEY, {expiresIn: '3000s'})
-}
 
 const router = express.Router();
 
-router.post('/login', (req, res) => {
-    controller.login(req.body)
+router.post('/signup', (req, res) => {
+    controller.signup(req.body)
     .then(data => {
-        const token = generate_access_token({id: data._id, name: data.name, level: data.level})
+        const token = generate_token({id: data._id, name: data.name, level: data.level})
         res.jsonp({name: data.name, level: data.level, token: token})
     })
     .catch(error => res.jsonp(error));
 })
 
-router.post('/register', (req, res) => {
-    controller.create(req.body)
+router.post('/login', (req, res) => {
+    controller.login(req.body)
     .then(data => {
-        const token = generate_access_token({id: data._id, name: data.name, level: data.level})
+        const token = generate_token({id: data._id, name: data.name, level: data.level})
         res.jsonp({name: data.name, level: data.level, token: token})
     })
     .catch(error => res.jsonp(error));

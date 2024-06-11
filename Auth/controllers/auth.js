@@ -4,9 +4,9 @@ function login(data){
     return model.findOne({username: data.username, password: data.password}).exec();
 }
 
-function create(data){
+function signup(data){
     const item = new model(data);
     return item.save();
 }
 
-export default {login, create}
+export default {login, signup}

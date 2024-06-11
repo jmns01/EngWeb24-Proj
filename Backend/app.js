@@ -1,25 +1,24 @@
 import express from 'express';
 import mongoose from 'mongoose';
 
-import inquiricoes from './routes/inquiricoes.js';
-import utilizadores from './routes/utilizadores.js';
+import inquiries from './routes/inquiries.js';
+import users from './routes/users.js';
 
-const mongodb_connection = 'mongodb://127.0.0.1/inquiricoes';
-mongoose.connect(mongodb_connection);
+const mongodb_connection = 'mongodb://127.0.0.1/EngWeb';
+mongoose.connect(mongodb_connection)
+.then(() => console.log('Conexão ao MongoDB realizada com sucesso!'))
+.catch((error) => console.log('Erro de conexão ao MongoDB: ', error))
 
 const database = mongoose.connection;
 database.on("error", console.error.bind(console, "Erro de conexão ao MongoDB"));
-database.once("open", () => {
-    console.log("Conexão ao MongoDB realizada com sucesso");
-});
 
 const app = express();
 const port = 7777;
 
 app.use(express.json());
 
-app.use('/inquiricoes', inquiricoes);
-app.use('/utilizadores', utilizadores);
+app.use('/api/inquiries', inquiries);
+app.use('/api/users', users);
 
 app.listen(port, () => {
     console.log('Backend API Server listening port ' + port);

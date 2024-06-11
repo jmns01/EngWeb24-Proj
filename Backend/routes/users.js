@@ -1,13 +1,12 @@
 import express from 'express'
-import controller from '../controllers/utilizadores.js'
-import verify_jwt from '../authorization/auth.js'
+import controller from '../controllers/users.js'
+import {verify_token} from '../authorization/auth.js';
 
 const router = express.Router();
 
-// Trocar 'item' pelo nome do atributo desejado
 router.get('/', (req, res) => {
-    if('item' in req.query){
-        controller.read_all_conditional(req.query.item)
+    if('name' in req.query){
+        controller.read_all_name(req.query.name)
         .then(data => res.jsonp(data))
         .catch(error => res.jsonp(error));
     }else{
@@ -25,17 +24,17 @@ router.post('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     controller.read(req.params.id)
-    .then(data => res.jsonp(data[0] || {}))
+    .then(data => res.jsonp(data))
     .catch(error => res.jsonp(error));
 })
 
-router.put('/:id', verify_jwt, (req, res) => {
+router.put('/:id', verify_token, (req, res) => {
     controller.update(req.params.id, req.body)
     .then(() => res.sendStatus(204))
     .catch(error => res.jsonp(error));
 })
 
-router.delete('/:id', verify_jwt, (req, res) => {
+router.delete('/:id', verify_token, (req, res) => {
     controller.remove(req.params.id)
     .then(() => res.sendStatus(204))
     .catch(error => res.jsonp(error));

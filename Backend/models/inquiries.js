@@ -88,6 +88,6 @@ const modelSchema = new mongoose.Schema({
     ProcessInfoDate: String,
     OtherDescriptiveData: String,
     ProcessInfo: String
-}, {collection: 'inquiricoes', versionKey: false})
+}, {collection: 'inquiries', versionKey: false})
 
-export default mongoose.model('inquiricao', modelSchema)
+export default mongoose.model('inquiry', modelSchema)

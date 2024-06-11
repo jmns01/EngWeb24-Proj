@@ -1,13 +1,11 @@
-import model from '../models/utilizadores.js'
+import model from '../models/users.js'
 
 function read_all(){
     return model.find().exec();
 }
 
-// Exemplo de read : ?condition=AAAAA
-// Trocar o 'item' pelo nome do atributo desejado
-function read_all_condition(condition){
-    return model.find({item: condition}).exec();
+function read_all_name(condition){
+    return model.find({name: condition}).exec();
 }
 
 function read(id){
@@ -27,4 +25,4 @@ function remove(){
     return model.findOneAndDelete({_id: id}).exec();
 }
 
-export default {read_all, read_all_condition, read, create, update, remove}
+export default {read_all, read_all_name, read, create, update, remove}

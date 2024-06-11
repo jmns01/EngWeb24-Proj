@@ -53,8 +53,10 @@ module.exports.findMaxId = () => {
 }
 
 module.exports.insert = inq =>{
-    var newInquiricao = new Inquiricao(inq)
-    return newInquiricao.save()
+    if((Inquiricao.find({_id : inq._id}).exec()).length != 1){
+        var newInquiricao = new Inquiricao(inq)
+        return newInquiricao.save()
+    }
 }
 
 // Atualiza uma Inquiricao existente

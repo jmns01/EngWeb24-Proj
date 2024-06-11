@@ -29,7 +29,7 @@ mongoimport --db EngWeb --collection users --file utilizadores.json --jsonArray
 
 `GET /inquiries` - Lista de todas as inquirições.
 
-`GET /inqueries?` - Lista de todas as inquirições consoante um termo.
+`GET /inquiries?` - Lista de todas as inquirições consoante um termo.
 
 `GET /inquiries/{id}` - Informação de uma inquirição.
 

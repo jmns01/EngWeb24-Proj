@@ -51,3 +51,18 @@ module.exports.findMaxId = () => {
         .limit(1)
         .exec();
 }
+
+module.exports.insert = inq =>{
+    var newInquiricao = new Inquiricao(inq)
+    return newInquiricao.save()
+}
+
+// Atualiza uma Inquiricao existente
+module.exports.update = (id, i) => {
+    return Inquiricao.findOneAndUpdate({_id : id}, i, {new: true}).exec();
+}
+
+// Exclui uma Inquiricao
+module.exports.delete = id => {
+    return Inquiricao.findOneAndDelete({_id : id}).exec();
+}

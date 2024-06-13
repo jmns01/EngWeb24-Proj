@@ -1,0 +1,78 @@
+extends includes/layout 
+
+block content 
+    .w3-container
+        .w3-cell(style="width:5%;")
+            i.fa.fa-angle-right(style="color: #000000;")
+        .w3-cell(style="width:95%;")
+            h3 &nbsp;&nbsp;&nbsp;Escolha uma opção:
+        ul.w3-ul.w3-card-4
+            li.w3-bar
+                span
+                    .w3-bar-item
+                        .w3-bar-item
+                            a(href="/inquiries") 
+                                span
+                                    .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                        i.fa.fa-folder-open(style="color: #000000;")
+                                    .w3-container.w3-cell(style="width:90%; height: 80%")
+                                        .w3-large #[b Lista de Inquirições de Génere]
+                                            h6 Aceder e editar vários registos, assim como as publicações a eles referentes
+            if level == "Administrador"
+                li.w3-bar
+                    span
+                        .w3-bar-item
+                            .w3-bar-item
+                                a(href="/addAdmin") 
+                                    span
+                                        .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                            i.fa.fa-user-plus(style="color: #000000;")
+                                        .w3-container.w3-cell(style="width:90%; height: 80%")
+                                            .w3-large #[b Adicionar Administrador]
+                                                h6 Adicionar um novo perfil de administrador
+                li.w3-bar
+                    span
+                        .w3-bar-item
+                            .w3-bar-item
+                                a(href="/gerirContas") 
+                                    span
+                                        .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                            i.fa.fa-user-cog(style="color: #000000;")
+                                        .w3-container.w3-cell(style="width:90%; height: 80%")
+                                            .w3-large #[b Gestão de Contas]
+                                                h6 Editar e/ou remover contas de utilizadores
+            if is_logged
+                li.w3-bar
+                    span
+                        .w3-bar-item
+                            .w3-bar-item
+                                a(href="/auth/logout") 
+                                    span
+                                        .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                            i.fa.fa-sign-out-alt(style="color: #000000;")
+                                        .w3-container.w3-cell(style="width:90%; height: 80%")
+                                            .w3-large #[b Sair]
+                                                h6 Terminar sessão
+            else
+                li.w3-bar
+                    span
+                        .w3-bar-item
+                            .w3-bar-item
+                                a(href="/auth/login") 
+                                    span
+                                        .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                            i.fa.fa-sign-in-alt(style="color: #000000;")
+                                        .w3-container.w3-cell(style="width:90%; height: 80%")
+                                            .w3-large #[b Entrar]
+                                                h6 Iniciar sessão
+                li.w3-bar
+                    span
+                        .w3-bar-item
+                            .w3-bar-item
+                                a(href="/auth/register") 
+                                    span
+                                        .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                            i.fa.fa-user-plus(style="color: #000000;")
+                                        .w3-container.w3-cell(style="width:90%; height: 80%")
+                                            .w3-large #[b Registar Utilizador]
+                                                h6 Criar nova conta de utilizador

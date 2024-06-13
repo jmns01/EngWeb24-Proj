@@ -1,0 +1,25 @@
+extends ../includes/layout
+
+block content
+  .w3-card-4
+    .w3-container
+      h1 Login
+
+    .w3-container  
+      form.w3-container(action="/auth/login" method="POST")
+        fieldset 
+          legend Credenciais:
+          label(for="username") Username
+          input.w3-input(type="text" name="username" required)
+          
+          label(for="password") Password
+          input.w3-input(type="password" name="password" required)
+
+        .button-container
+          input.w3-btn.w3-blue.w3-margin(type="submit" value="Iniciar sessão")
+          a.w3-btn.w3-teal.w3-margin(href="/auth/register") Criar uma conta
+
+    if error != undefined
+      .w3-panel.w3-yellow
+        h3 Erro no login!
+        p= error

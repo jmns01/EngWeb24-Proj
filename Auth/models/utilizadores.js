@@ -9,6 +9,6 @@ const modelSchema = new mongoose.Schema({
     dateCreated: {type: Date, required: true},
     lastAccess: {type: Date, required: true},
     active: {type: Boolean, required: true}
-}, {collection: 'utilizadores', versionKey: false})
+}, {collection: 'users', versionKey: false})
 
-export default mongoose.model('utilizador', modelSchema)
+export default mongoose.model('user', modelSchema)

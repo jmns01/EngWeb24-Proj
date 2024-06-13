@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    .w3-card-4
+        header.w3-container.w3-light-blue
+            h1 #[b Adicionar Inquirição]
+        .w3-container
+            h3 Adicionar Inquirição Manualmente
+            form(action="/inquiries" method="POST")
+                .w3-container
+                    label(for="nome") Nome:
+                    input.w3-input(type="text" name="nome" required)
+                .w3-container
+                    label(for="descricao") Descrição:
+                    input.w3-input(type="text" name="descricao" required)
+                .w3-container
+                    label(for="data") Data:
+                    input.w3-input(type="date" name="data" required)
+                .w3-container
+                    button.w3-button.w3-light-blue(type="submit") Adicionar Inquirição
+            h3 Adicionar Inquirição por Ficheiro
+            form(action="/addInquiricaoFile" method="POST" enctype="multipart/form-data")
+                .w3-container
+                    label(for="inquiricaoFile") Selecionar Ficheiro (.json):
+                    input.w3-input(type="file" name="inquiricaoFile" accept=".json" required)
+                .w3-container
+                    button.w3-button.w3-light-blue(type="submit") Upload Inquirição
+            .w3-container(style="margin-top: 20px;")

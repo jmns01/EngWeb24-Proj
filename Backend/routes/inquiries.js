@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
         .then(data => res.jsonp(data))
         .catch(error => res.jsonp(error));
     }else{
-        controller.read_all(req.query, limit, skip)
+        controller.read_all(limit, skip)
         .then(data => res.jsonp(data))
         .catch(error => res.jsonp(error));
     }

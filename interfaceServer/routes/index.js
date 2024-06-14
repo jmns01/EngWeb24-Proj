@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 const { token } = require('morgan');
 
-router.use(bodyParser.urlencoded({ extended: true }));
+//router.use(bodyParser.urlencoded({ extended: true }));
 
 // Configuração do express-session
 router.use(session({
@@ -62,7 +62,7 @@ router.get('/getInquiricoesList', function (req, res, next) {
       axios.get(`http://localhost:7777/getInquiricoesList?name=${req.query.name}&page=${page}&limit=${limit}`)
       .then(resp => {
         var inquiricoes = resp.data;
-        res.status(200).render("inquiricoesList", {type: "Administador", userName: "jmns", filterType : "name", value : req.query.name, lista: inquiricoes, date: d, page: page})
+        res.status(200).render("inquiricoesList", {type: "Administrador", userName: "jmns", filterType : "name", value : req.query.name, lista: inquiricoes, date: d, page: page})
       })
       .catch(erro => {
         console.log('Erro na listagem de inquiricoes: ' + erro);
@@ -72,7 +72,7 @@ router.get('/getInquiricoesList', function (req, res, next) {
       axios.get(`http://localhost:7777/getInquiricoesList?local=${req.query.local}&page=${page}&limit=${limit}`)
       .then(resp => {
         var inquiricoes = resp.data;
-        res.status(200).render("inquiricoesList", {type: "Administador", userName: "jmns", filterType : "local", value : req.query.local, lista: inquiricoes, date: d, page: page})
+        res.status(200).render("inquiricoesList", {type: "Administrador", userName: "jmns", filterType : "local", value : req.query.local, lista: inquiricoes, date: d, page: page})
       })
       .catch(erro => {
         console.log('Erro na listagem de inquiricoes: ' + erro);
@@ -82,7 +82,7 @@ router.get('/getInquiricoesList', function (req, res, next) {
       axios.get(`http://localhost:7777/getInquiricoesList?date=${req.query.date}&page=${page}&limit=${limit}`)
       .then(resp => {
         var inquiricoes = resp.data;
-        res.status(200).render("inquiricoesList", {type: "Administador", userName: "jmns", filterType : "date", value : req.query.date, lista: inquiricoes, date: d, page: page})
+        res.status(200).render("inquiricoesList", {type: "Administrador", userName: "jmns", filterType : "date", value : req.query.date, lista: inquiricoes, date: d, page: page})
       })
       .catch(erro => {
         console.log('Erro na listagem de inquiricoes: ' + erro);
@@ -93,13 +93,108 @@ router.get('/getInquiricoesList', function (req, res, next) {
     axios.get(`http://localhost:7777/getInquiricoesList?page=${page}&limit=${limit}`)
     .then(resp =>{
       var inquiricoes = resp.data;
-      res.status(200).render("inquiricoesList", {type: "Administador", userName: "jmns", filterType : "Not filtered", value : null, lista: inquiricoes, date: d, page: page})
+      res.status(200).render("inquiricoesList", {type: "Administrador", userName: "jmns", filterType : "Not filtered", value : null, lista: inquiricoes, date: d, page: page})
     })
     .catch(erro => {
       console.log('Erro na listagem de inquiricoes: ' + erro);
       res.status(500).render("error", {error: erro});
     });
   }
+});
+
+router.get('/posts/:id', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  var page = parseInt(req.query.page) || 1;
+  var limit = 250;
+
+  axios.get(`http://localhost:7777/posts/getPostsList?inquiricaoId=${req.params.id}&page=${page}&limit=${limit}`)
+  .then(resp => {
+    var post = resp.data;
+    res.status(200).render("post", {type: "Administrador", userName: "jmns", posts: post, i: req.params.id, date: d, page: page})
+  })
+  .catch(erro => {
+    console.log('Erro na obtenção do post: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.get('/addPost/:id', function(req, res){
+  var date = new Date().toISOString().substring(0, 16);
+  console.log(req.params.id);
+  axios.get(`http://localhost:7777/posts/getMaxId`)
+  .then(resp => {
+    console.log(resp.data);
+    newId = parseInt(resp.data)+1;
+    console.log(newId);
+    res.status(200).render('addPost', {type: 'Administrador', userName: 'jmns', d: date, inquiricaoId: req.params.id, post_id: newId})
+  })
+    .catch(erro => {
+    console.log('Erro na obtenção do id do post: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.post('/addPost/:id', function(req, res){
+  console.log(req.body);
+  const post_id = req.body.post_id; 
+  console.log(`POST ID: ${post_id}`);
+  const title = req.body.Title;
+  const content = req.body.Description;
+  const inquiricaoId = req.params.id;
+  const date = req.body.d; 
+  console.log(date);
+  
+  axios.post(`http://localhost:7777/posts/addPost/${req.params.id}`, {
+    _id: post_id,
+    inquiricaoId: inquiricaoId,
+    Author: 'jmns',
+    Date: date,
+    Title: title,
+    Description: content,
+    Comments: []
+  })
+  .then(resp => {
+    res.status(200).redirect(`/posts/${req.params.id}`);
+  })
+  .catch(erro => {
+    console.log('Erro na adição do post: ' + erro);
+    res.status(500).render("error", { error: erro });
+  });
+});
+
+router.get('/posts/getComments/:post_id/:inquiricaoId', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+
+  axios.get(`http://localhost:7777/posts/getComments/${req.params.post_id}`)
+  .then(resp => {
+    var comments = resp.data;
+    res.status(200).render("comments", {type: "Administrador", userName: "jmns", lista: comments, inquiricaoId : req.params.inquiricaoId, post_id: req.params.post_id, date: d})
+  })
+  .catch(erro => {
+    console.log('Erro na obtenção dos comentários: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.post('/posts/addComments/:post_id/:inquiricaoId', function(req, res){
+  const author = req.body.Autor;
+  const titulo = req.body.Title;
+  const desc = req.body.Description;
+  const data = req.body.Date;
+
+  axios.post(`http://localhost:7777/posts/addComment/${req.params.post_id}`, {
+    Autor: author,
+    Date: data,
+    Title: titulo,
+    Description: desc
+  })
+  .then(resp => {
+    res.status(200).redirect(`/posts/getComments/${req.params.post_id}/${req.params.inquiricaoId}`);
+  })
+  .catch(erro => {
+    console.log('Erro na adição do comentário: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
 });
 
 /* GET Página de opções para o Admin */

@@ -1,0 +1,91 @@
+extends layout
+
+block content
+    .w3-card-4
+        header.w3-container.w3-green
+            .w3-bar.w3-border-bottom
+                .w3-bar-item
+                    h2 #[b Trabalho Prático de EngWeb2024]
+                if type == "Not logged"
+                    a.w3-bar-item.w3-button.w3-right(href="/login" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-sign-in-alt(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Login]
+                else
+                    a.w3-bar-item.w3-button(href="/home" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-home(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Início]
+                    a.w3-bar-item.w3-button(href="/getInquiricoesList" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-folder-open(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Lista de Inquirições]
+                    if type == "Administrador"
+                        a.w3-bar-item.w3-button(href="/moreOptions" style="position:relative; top:10px;")
+                            .w3-cell-row
+                                .w3-cell
+                                    i.fa.fa-cog(style="color: #000000;")
+                                .w3-cell(style="width:80%")
+                                    h6 #[b Mais Opções]
+                    .w3-bar-item.w3-right(style="display: flex; top:10px; justify-content: space-between; align-items: center;")
+                        h6 #{userName}&nbsp;&nbsp;
+                        a.w3-button(href="/logout" style="position:relative; top:1px; display: flex; align-items: center;")
+                            i.fa.fa-sign-out-alt(style="color: #000000;")
+                            h6 &nbsp;&nbsp;#[b Sair]
+            h3 &nbsp;&nbsp;&nbsp;#[b Lista de Comentários do Post #{post_id} do Processo #{inquiricaoId}]        
+        .w3-panel.w3-leftbar.w3-border-blue.w3-pale-blue
+            h3 #[b Nº de Comentários:] #{lista.length}
+        form.w3-panel(method="POST" action="/posts/addComments/" + post_id + "/" + inquiricaoId)
+            .w3-cell-row
+                    .w3-cell(style="width:5%; position:relative; top:15px;")
+                        i.fa.fa-solid.fa-user.fa-2xl(style="color: #000000;")
+                    .w3-cell(style="width:95%; position:relative; top:-15px;")
+                        fieldset.w3-panel.w3-round-xlarge.w3-border
+                            legend #[b Adicionar Comentário]
+                            label #[b > Autor]
+                            input.w3-input.w3-round(type="text" name="Autor" value=`${userName}` readonly)
+                            label #[b > Título/Assunto]
+                            input.w3-input.w3-round(type="text" name="Title")
+                            label #[b > Conteúdo/Descrição]
+                            input.w3-input.w3-round(type="text" name="Description")
+                            label #[b > Data de Criação]
+                            input.w3-input.w3-round(type="text" name="Date" value=`${date}` readonly) 
+                            .w3-panel
+                                button.w3-btn.w3-pale-green.w3-border.w3-border-black.w3-hover-green.w3-round.w3-round-xlarge.w3-small.w3-right(type="submit")
+                                    .w3-cell-row
+                                        .w3-cell
+                                            i.fa.fa-solid.fa-circle-plus.fa-xl(style="color: #000000;")
+                                        .w3-cell(style="width:84%")
+                                            h4 &nbsp;&nbsp; #[b Adicionar Comentário] 
+        if lista.length > 0
+            each comment in lista
+                .w3-panel
+                    .w3-cell-row
+                        .w3-cell(style="width:5%; position:relative; top:15px;")
+                            i.fa.fa-solid.fa-user.fa-2xl(style="color: #000000;")
+                            h6 #[b #{comment.Autor}]
+                        .w3-cell(style="width:95%; position:relative; top:-15px;")
+                            .w3-panel.w3-round-xlarge.w3-border
+                                h4 #[b #{comment.Title}]
+                                h4 #[b #{comment.Date}]
+                                .w3-border-top
+                                    h5 #{comment.Description}
+        .w3-panel
+            a(href="/posts/" + inquiricaoId)
+                button.w3-btn.w3-khaki.w3-border.w3-border-black.w3-hover-yellow.w3-round.w3-round-xlarge.w3-small(style="position:relative; left:20px;")
+                    .w3-cell-row
+                        .w3-cell
+                            i.fa.fa-solid.fa-arrow-left.fa-2xl(style="color: #000000;")
+                        .w3-cell(style="width:84%")
+                            h5 &nbsp;&nbsp; #[b Voltar aos Posts]	   
+  
+    footer.w3-container.w3-green.w3-center
+        h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
+        h5 Generado por EngWeb2024 in #{date}
+    

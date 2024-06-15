@@ -45,7 +45,7 @@ module.exports.loginUser = (username, data) => {
 }
 
 module.exports.updateUser = newUser => {
-    return User.updateOne({username: newUser.username}, newUser)  
+    return User.updateOne({_id: newUser._id}, newUser)  
         .then(resposta => {
             return resposta
         })
@@ -63,39 +63,3 @@ module.exports.deleteUser = username => {
         return erro
     })
 }
-module.exports.deactivateUser = async (username) => {
-    try {
-      const updatedUser = await User.findOneAndUpdate(
-        { username },
-        { $set: { active: false } },
-        { new: true }
-      );
-  
-      if (!updatedUser) {
-        throw new Error('Usuário não encontrado.');
-      }
-  
-      return updatedUser;
-    } catch (error) {
-      console.error('Erro ao desativar o usuário:', error);
-      throw new Error('Ocorreu um erro ao processar a solicitação.');
-    }
-  };
-module.exports.activateUser = async (username) => {
-    try {
-      const updatedUser = await User.findOneAndUpdate(
-        { username },
-        { $set: { active: true } },
-        { new: true }
-      );
-  
-      if (!updatedUser) {
-        throw new Error('Usuário não encontrado.');
-      }
-  
-      return updatedUser;
-    } catch (error) {
-      console.error('Erro ao ativar o usuário:', error);
-      throw new Error('Ocorreu um erro ao processar a solicitação.');
-    }
-  };

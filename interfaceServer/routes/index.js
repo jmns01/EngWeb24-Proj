@@ -217,6 +217,50 @@ router.get('/moreOptions', function(req, res){
   }
 });
 
+router.get('/addAdmin', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  res.status(200).render('addAdmin', {date: d});
+});
+
+router.get('/gerirContas', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  axios.get('http://localhost:7778/users/get')
+  .then(users => {
+    console.log(users.data);
+    res.status(200).render('usersList', {type: "Administrador", userName: "jmns", lista : users.data, date: d});
+  })
+  .catch(erro => {
+    console.log('Erro na obtenção dos utilizadores: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.get('/editUser/:username', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  axios.get(`http://localhost:7778/users/get/${req.params.username}`)
+  .then(user =>
+    res.status(200).render('editUser', {user: user.data, date: d})
+  )
+  .catch(erro => {
+    console.log('Erro na obtenção do utilizador: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.post('/editUser/:username', function(req, res){
+  const {id, name, username, password, level, dateCreated, lastAccess} = req.body;
+  console.log(req.body);
+  axios.put(`http://localhost:7778/users/edit/user/${req.params.username}`, {_id: id, name: name, username: username, password: password, level: level, dateCreated: dateCreated, lastAccess: lastAccess, active: true})
+  .then(response => {
+    console.log('Utilizador atualizado com sucesso');
+    res.redirect(`/editUser/${username}`);
+  })
+  .catch(error => {
+    console.error('Erro ao atualizar utilizador:', error);
+    res.redirect(`/editUser/${username}`);
+  });
+});
+
 router.get('/login', function (req, res) {
   var data = new Date().toISOString().substring(0, 16);
   var error = req.session.error;
@@ -276,16 +320,31 @@ router.get('/register', function(req, res){
 
 router.post('/register', function(req, res){
   console.log(req.body);
-  const {name, username, password, level} = req.body;
-  axios.post('http://localhost:7778/users/register', {name: name, username: username, password: password, level: level})
-  .then(response => {
-    console.log('Utilizador registado com sucesso');
-    res.redirect('/login');
-  })
-  .catch(error => {
-    console.error('Erro ao registar utilizador:', error);
-    res.redirect('/register');
-  });
+  if(req.query.admin){
+    var level = "Administrador";
+    const {name, username, password} = req.body;
+    axios.post('http://localhost:7778/users/register', {name: name, username: username, password: password, level: level})
+    .then(response => {
+      console.log('Utilizador registado com sucesso');
+      res.redirect('/login');
+    })
+    .catch(error => {
+      console.error('Erro ao registar utilizador:', error);
+      res.redirect('/register');
+    });
+  }
+  else{
+    const {name, username, password, level} = req.body;
+    axios.post('http://localhost:7778/users/register', {name: name, username: username, password: password, level: level})
+    .then(response => {
+      console.log('Utilizador registado com sucesso');
+      res.redirect('/login');
+    })
+    .catch(error => {
+      console.error('Erro ao registar utilizador:', error);
+      res.redirect('/register');
+    });
+  }
 });
 
 router.get('/logout', function(req, res){

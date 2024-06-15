@@ -105,20 +105,4 @@ router.delete('/delete/user/:username',auth.verificaAcesso,function(req,res){
 
 })
 
-router.put('/deactivate/user/:username', auth.verificaAcesso, function(req, res){
-  User.deactivateUser(req.params.username)
-    .then(user => {
-      res.status(200).jsonp(user)
-    })
-    .catch(erro => res.status(520).jsonp({error: "Erro na busca do utilizador: " + erro}))
-})
-
-router.put('/activate/user/:username', auth.verificaAcesso, function(req, res){
-  User.activateUser(req.params.username)
-    .then(user => {
-      res.status(200).jsonp(user)
-    })
-    .catch(erro => res.status(520).jsonp({error: "Erro na busca do utilizador: " + erro}))
-})
-
 module.exports = router;

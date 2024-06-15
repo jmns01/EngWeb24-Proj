@@ -5,7 +5,7 @@ block content
     header.w3-container.w3-blue
       .w3-bar.w3-border-bottom
           .w3-bar-item
-              h2 #[b Registar uma conta]
+              h2 #[b Registar uma conta de Administrador]
           a.w3-bar-item.w3-button(href="/home" style="position:relative; top:10px;")
                       .w3-cell-row
                           .w3-cell
@@ -14,7 +14,7 @@ block content
                               h6 #[b Início]
     
     .w3-container  
-      form.w3-container(action="/register" method="POST")
+      form.w3-container(action=`/register?admin=${true}` method="POST")
         fieldset 
           legend Infos:
 
@@ -27,13 +27,6 @@ block content
           label Password 
           input.w3-input(type="password" name="password" required)
 
-        fieldset 
-          legend Nível:
-          input(type='radio' name='level' value='Produtor')
-          |  Produtor
-          br
-          input(type='radio' name='level' value='Consumidor')
-          |  Consumidor
 
         input.w3-btn.w3-blue.w3-margin(type="submit" value="Registar")
 
@@ -47,4 +40,4 @@ block content
 
     footer.w3-container.w3-blue.w3-center
         h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
-        h5 Generado por EngWeb2024 in #{d}
+        h5 Generado por EngWeb2024 in #{date}

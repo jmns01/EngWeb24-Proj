@@ -1,0 +1,93 @@
+extends layout
+
+block content
+    .w3-card-4
+        header.w3-container.w3-green
+            .w3-bar.w3-border-bottom
+                .w3-bar-item
+                    h2 #[b Trabalho Prático de EngWeb2024]
+                if type == "Not logged"
+                    a.w3-bar-item.w3-button.w3-right(href="/login" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-sign-in-alt(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Login]
+                else
+                    a.w3-bar-item.w3-button(href="/home" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-home(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Início]
+                    a.w3-bar-item.w3-button(href="/getInquiricoesList" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-folder-open(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Lista de Inquirições]
+                    if type == "Administrador"
+                        a.w3-bar-item.w3-button(href="/moreOptions" style="position:relative; top:10px;")
+                            .w3-cell-row
+                                .w3-cell
+                                    i.fa.fa-cog(style="color: #000000;")
+                                .w3-cell(style="width:80%")
+                                    h6 #[b Mais Opções]
+                    .w3-bar-item.w3-right(style="display: flex; top:10px; justify-content: space-between; align-items: center;")
+                        h6 #{userName}&nbsp;&nbsp;
+                        a.w3-button(href="/logout" style="position:relative; top:1px; display: flex; align-items: center;")
+                            i.fa.fa-sign-out-alt(style="color: #000000;")
+                            h6 &nbsp;&nbsp;#[b Sair]
+            h3 &nbsp;&nbsp;&nbsp;#[b Gestão de Contas]
+        .w3-panel.w3-leftbar.w3-border-blue.w3-pale-blue
+            .w3-cell-row
+                .w3-cell(style="width:90%")
+                    h3 #[b Nº de Users:] #{lista.length} 
+                .w3-cell
+                    a(href="/register")
+                        button.w3-btn.w3-pale-green.w3-border.w3-border-black.w3-hover-green.w3-round
+                            .w3-cell
+                                i.fa.fa-sharp.fa-solid.fa-user-plus.fa-2xl
+                            .w3-cell(style="width:84%")
+                                h4 &nbsp;&nbsp;#[b Criar Utilizador]
+                    a(href="/addAdmin")
+                        button.w3-btn.w3-pale-green.w3-border.w3-border-black.w3-hover-green.w3-round
+                            .w3-cell
+                                i.fa.fa-sharp.fa-solid.fa-user-plus.fa-2xl
+                            .w3-cell(style="width:84%")
+                                h4 &nbsp;&nbsp;#[b Criar Administrador]
+        .w3-container
+            table.w3-table-all
+                tr
+                    th Nome
+                    th Username
+                    th Nível de Acesso
+                    th Data de Criação de Conta
+                    th Último Acesso
+                
+                each user in lista
+                    tr
+                        td= user.name
+                        td= user.username
+                        td= user.level
+                        td= user.dateCreated
+                        td= user.lastAccess
+                        td
+                            .w3-panel
+                                td 
+                                    a(href="/editUser/"+user.username)
+                                        button.w3-btn.w3-blue.w3-mb-2.w3-border.w3-border-black.w3-hover-blue.w3-margin-right
+                                            .w3-cell
+                                                i.fa.fa-regular.fa-pen-to-square
+                                            .w3-cell(style="width:84%")
+                                                h6 &nbsp;&nbsp;Editar User
+                                td
+                                    a(href="/deleteUser/"+user.username)
+                                        button.w3-btn.w3-red.w3-mb-2.w3-border.w3-border-black.w3-hover-red.w3-margin-right
+                                            .w3-cell
+                                                i.fa.fa-solid.fa-trash
+                                            .w3-cell(style="width:84%")
+                                                h6 &nbsp;&nbsp;Apagar User
+        footer.w3-container.w3-green.w3-center
+            h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
+            h5 Generado por EngWeb2024 in #{date}

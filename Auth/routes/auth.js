@@ -1,4 +1,5 @@
 import express from 'express'
+import bcrypt from 'bcrypt'
 import generate_token from '../includes/generate_token.js'
 import encrypt_password from '../includes/encrypt_password.js'
 import controller from '../controllers/auth.js'
@@ -19,12 +20,16 @@ router.post('/signup', async (req, res) => {
 })
 
 router.post('/login', async (req, res) => {
-    req.body.password = await encrypt_password(req.body.password)
     controller.login(req.body)
-    .then(data => {
+    .then(async data => {
         if(data != null){
-            const token = generate_token({id: data._id, name: data.name, username: data.username, level: data.level})
-            res.jsonp({id: data._id, name: data.name, username: data.username, level: data.level, token: token})            
+            const compare = await bcrypt.compare(req.body.password, data.password)
+            if(compare){
+                const token = generate_token({id: data._id, name: data.name, username: data.username, level: data.level})
+                res.jsonp({id: data._id, name: data.name, username: data.username, level: data.level, token: token})                        
+            }else{
+                res.sendStatus(401)
+            }
         }else{
             res.sendStatus(401)
         }

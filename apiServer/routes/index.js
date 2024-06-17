@@ -154,6 +154,18 @@ router.delete('/deleteInquiricao/:id', function(req, res, next) {
     .catch(erro => res.status(500).send(erro));
 });
 
+router.delete('/deleteAllInquiricoes', function(req, res, next) {
+  Inquiricao.deleteAllInquiricoes()
+    .then(dados => res.status(200).send(dados))
+    .catch(erro => res.status(500).send(erro));
+});
+
+router.post('/addManyInquiricoes', function(req, res, next) {
+  Inquiricao.addManyInquiricoes(req.body)
+  .then(dados => res.status(200).send(dados))
+  .catch(erro => res.status(500).send(erro));
+});
+
 router.get('/getRelations/:inquiricaoId/:relationsName', function(req, res, next) {
   const relationName = req.params.relationsName;
   Inquiricao.getRelation(req.params.inquiricaoId)

@@ -20,6 +20,18 @@ module.exports.getAllUsers = () => {
         .then(doc => doc ? doc : []);
 }
 
+module.exports.deleteAllUsers = () => {
+    return User
+        .deleteMany()
+        .exec()
+}
+
+module.exports.addManyUsers = users => {
+    return User
+        .insertMany(users)
+        .exec()
+}
+
 module.exports.getUser = username => {
     return User.findOne({username: username})
         .then(resposta => {

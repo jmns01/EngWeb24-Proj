@@ -61,6 +61,18 @@ module.exports.deleteInquiricao = id => {
         .exec();
 }
 
+module.exports.deleteAllInquiricoes = () => {
+    return Inquiricao
+        .deleteMany()
+        .exec();
+}
+
+module.exports.addManyInquiricoes = inquiricoes => {
+    return Inquiricao
+        .insertMany(inquiricoes)
+        .exec();
+}
+
 module.exports.insertInquiricao = (inquiricao) => {
     return Inquiricao
     .create(inquiricao)

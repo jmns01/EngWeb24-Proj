@@ -17,6 +17,18 @@ module.exports.getAll = () => {
         .then(doc => doc ? doc : []);
 }
 
+module.exports.deleteAll = () => {
+    return Post
+        .deleteMany()
+        .exec();
+}
+
+module.exports.addManyPosts = (posts) => {
+    return Post
+        .insertMany(posts)
+        .exec();
+}
+
 module.exports.listByInquiricaoId = (inquiricaoId, limit, skip) => {
     return Post
         .find({inquiricaoId: inquiricaoId})

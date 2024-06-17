@@ -22,6 +22,18 @@ router.get('/getAllPosts', function(req, res, next) {
     .catch(erro => res.status(500).send(erro));
 });
 
+router.delete('/deleteAllPosts', function(req, res, next) {
+    Post.deleteAll()
+    .then(dados => res.status(200).send(dados))
+    .catch(erro => res.status(500).send(erro));
+});
+
+router.post('/addManyPosts', function(req, res, next) {
+    Post.addManyPosts(req.body)
+    .then(dados => res.status(200).send(dados))
+    .catch(erro => res.status(500).send(erro));
+});
+
 router.get('/getComments/:id', function(req, res, next) {   
     if(req.params.id){
         Post.getComments(req.params.id)

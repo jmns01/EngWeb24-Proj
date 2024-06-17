@@ -23,6 +23,22 @@ router.get('/getAllUsers', function(req, res){
     .catch(erro => res.status(500).jsonp({error: "Erro na obtenção da lista de users: " + erro}))
 });
 
+router.get('/deleteAllUsers', function(req, res){
+  User.deleteAllUsers()
+    .then(users => {
+      res.status(200).jsonp(users)
+    })
+    .catch(erro => res.status(500).jsonp({error: "Erro na obtenção da lista de users: " + erro}))
+});
+
+router.post('/addManyUsers', function(req, res){
+  User.addManyUsers(req.body)
+    .then(users => {
+      res.status(200).jsonp(users)
+    })
+    .catch(erro => res.status(500).jsonp({error: "Erro na adição de users: " + erro}))
+});
+
 router.get('/get/:username', function(req, res){
   User.getUser(req.params.username)
     .then(user => {

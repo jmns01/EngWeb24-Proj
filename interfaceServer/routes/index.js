@@ -7,6 +7,17 @@ var session = require('express-session');
 const { token } = require('morgan');
 const path = require('path');
 const fs = require('fs');
+var multer = require('multer');
+var upload = multer({dest: 'uploads'})
+const Ajv = require('ajv');
+
+// Coisas para upload de ficheiros
+const ajv = new Ajv();
+
+// Load the JSON schema
+const schemaPath = path.join(__dirname, '../manifest.json');
+const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+const validate = ajv.compile(schema);
 
 //router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -271,6 +282,87 @@ router.get('/downloadData', function(req, res) {
       console.error('Error waiting for promises:', error);
       res.status(500).send('Error generating data file');
     });
+});
+
+router.get('/uploadDataPage', function(req, res) {
+  var d = new Date().toISOString().substring(0, 16);
+  res.status(200).render('uploadPage', {type : "Administrador", userName : "jmns", date: d});
+});
+
+router.post('/files', upload.single('myFile'), (req, res) => {
+  console.log('cdir: ' + __dirname)
+  let oldPath = __dirname + '/../' + req.file.path;
+  console.log("old: " + oldPath)
+  let newPath = __dirname + '/../public/fileStore/' + req.file.originalname
+  console.log("new: " + newPath)
+  
+  fs.rename(oldPath, newPath, function(error){
+    if(error) throw error
+  })
+
+  // Read and validate the uploaded file
+  fs.readFile(newPath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Error reading uploaded file');
+      return;
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      const valid = validate(jsonData);
+
+      if (!valid) {
+        console.log('Validation errors:', validate.errors);
+        res.status(400).json({ errors: validate.errors });
+      } else {
+        console.log('Data is valid!');
+        console.log(jsonData);
+        //res.status(200).send('File uploaded and validated successfully');
+
+        const deleteInquiricaoReq = axios.delete('http://localhost:7777/deleteAllInquiricoes')
+        .then(response => console.log('Inquirições eliminadas com sucesso'))
+        .catch(error => console.error('Erro ao eliminar inquirições:', error));
+
+        const deletePostsReq = axios.delete('http://localhost:7777/posts/deleteAllPosts')
+        .then(response => console.log('Posts eliminados com sucesso'))
+        .catch(error => console.error('Erro ao eliminar posts:', error));
+
+        const deleteusersReq = axios.delete('http://localhost:7778/users/deleteAllUsers')
+        .then(response => console.log('Utilizadores eliminados com sucesso'))
+        .catch(error => console.error('Erro ao eliminar utilizadores:', error));
+
+        Promise.all([deleteInquiricaoReq, deletePostsReq, deleteusersReq])
+        .then(() => {
+          console.log('Inquirições, posts e utilizadores eliminados com sucesso');
+
+          const addInquiricoesReq = axios.post('http://localhost:7777/addManyInquiricoes', jsonData.inquiricoes)
+          .then(response => console.log('Inquirições adicionadas com sucesso'))
+          .catch(error => console.error('Erro ao adicionar inquirições:', error));
+
+          const addPostsReq = axios.post('http://localhost:7777/posts/addManyPosts', jsonData.posts)
+          .then(response => console.log('Posts adicionados com sucesso'))
+          .catch(error => console.error('Erro ao adicionar posts:', error));
+
+          const addUsersReq = axios.post('http://localhost:7778/users/addManyUsers', jsonData.users)
+          .then(response => console.log('Utilizadores adicionados com sucesso'))
+          .catch(error => console.error('Erro ao adicionar utilizadores:', error));
+
+          Promise.all([addInquiricoesReq, addPostsReq, addUsersReq])
+          .then(() => {
+            console.log('Inquirições, posts e utilizadores adicionados com sucesso');
+            res.status(200).redirect('/getInquiricoesList');
+          })
+          .catch(error => {
+            console.error('Error adding data:', error);
+            res.status(500).send('Error adding data');
+          });
+        });
+
+      }
+    } catch (parseError) {
+      res.status(400).send('Invalid JSON format in uploaded file');
+    }
+  });
 });
 
 router.get('/test/:id', function(req, res){

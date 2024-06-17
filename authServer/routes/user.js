@@ -73,7 +73,8 @@ router.post('/register',function(req, res) {
 })
 
 router.post('/login', function(req, res, next) {
-  User.loginUser(req.body)
+  var d = new Date().toISOString().substring(0, 16)
+  User.loginUser(req.body.username, req.body.password, d)
   .then(data => {
       if(data != null){
         const token = generate_token({name: data.name, username: data.username, level: data.level})

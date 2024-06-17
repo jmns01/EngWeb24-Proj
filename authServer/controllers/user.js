@@ -52,8 +52,8 @@ module.exports.addUser = u => {
         })
 }
 
-module.exports.loginUser = (username, data) => {
-    return User.updateOne({username: username}, {$set: {lastAccess: data}})
+module.exports.loginUser = (username, password, data) => {
+    return User.updateOne({username: username, password: password}, {$set: {lastAccess: data}})
         .then(resposta => {
             return resposta
         })

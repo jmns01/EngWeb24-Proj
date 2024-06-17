@@ -69,4 +69,19 @@ router.get('/:id/delete', is_logged, function(req, res){
     })
 })
 
+// posts/:id/comments - id da publicação
+router.post('/:id/comments', is_logged, function(req, res){
+    axios.post(api + 'posts/' + req.params.id + '/comments', req.body)
+    .then(response => {
+        if(response.status = 201){
+            res.redirect('/inquiries')
+        }else{
+            res.status(response.status).render('error', {message: response.message})
+        }
+    })
+    .catch(error => {
+        res.status(500).render('error', {error: error, message: error.message})
+    })
+})
+
 export default router

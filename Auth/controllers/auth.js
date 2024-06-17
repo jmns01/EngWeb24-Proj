@@ -1,7 +1,8 @@
 import model from '../models/utilizadores.js'
 
 function login(data){
-    return model.findOne({username: data.username, password: data.password}).exec();
+    var date = new Date().toISOString().substring(0, 16);
+    return model.findOneAndUpdate({username: data.username, password: data.password}, {lastAccess: date}, {new: true}).exec()
 }
 
 function signup(data){

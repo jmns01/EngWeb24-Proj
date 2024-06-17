@@ -61,8 +61,6 @@ mongoimport --db EngWeb --collection users --file utilizadores.json --jsonArray
 
 `POST /api/posts/{id}/comments`🔒 - Cria novo comentário na publicação.
 
-`DELETE /api/posts/{id}/comments/{id-comentario}`🔒🔒 - Elimina comentário da publicação.
-
 ## Frontend - localhost:8888
 
 `GET localhost:8888/signup` - Criar nova conta de utilizador.

@@ -9,6 +9,14 @@ module.exports.list = (limit, skip) => {
         .exec();
 }
 
+module.exports.getAll = () => {
+    return Post
+        .find()
+        .sort({_id: 1})
+        .exec()
+        .then(doc => doc ? doc : []);
+}
+
 module.exports.listByInquiricaoId = (inquiricaoId, limit, skip) => {
     return Post
         .find({inquiricaoId: inquiricaoId})

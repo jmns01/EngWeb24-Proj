@@ -5,6 +5,8 @@ var jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 const { token } = require('morgan');
+const path = require('path');
+const fs = require('fs');
 
 //router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -212,6 +214,63 @@ router.post('/editRelation/:inquiricaoId/:relationNome', function(req, res){
     console.error('Erro ao atualizar relação:', error);
     res.redirect(`/editRelation/${req.params.inquiricaoId}/${req.params.relationId}`);
   });
+});
+
+router.get('/downloadData', function(req, res) {
+  let inquiricoes = [];
+  let posts = [];
+  let users = [];
+
+  const inquiricoesRequest = axios.get('http://localhost:7777/getAllInquiricoes')
+    .then(response => {
+      console.log('Dados de inquirições descarregados com sucesso');
+      inquiricoes = response.data;
+    })
+    .catch(error => {
+      console.error('Erro ao descarregar dados de inquirições:', error);
+    });
+
+  const postsRequest = axios.get('http://localhost:7777/posts/getAllPosts')
+    .then(response => {
+      console.log('Dados de posts descarregados com sucesso');
+      posts = response.data;
+    })
+    .catch(error => {
+      console.error('Erro ao descarregar dados de posts:', error);
+    });
+
+  const usersRequest = axios.get('http://localhost:7778/users/getAllUsers')
+    .then(response => {
+      console.log('Dados de usuários descarregados com sucesso');
+      users = response.data;
+    })
+    .catch(error => {
+      console.error('Erro ao descarregar dados de usuários:', error);
+    });
+
+  Promise.all([inquiricoesRequest, postsRequest, usersRequest])
+    .then(() => {
+      console.log('inquiricoes:', inquiricoes);
+      console.log('posts:', posts);
+      console.log('users:', users);
+
+      const data = { inquiricoes: inquiricoes, posts: posts, users: users };
+      const jsonString = JSON.stringify(data, null, 2);
+
+      const filePath = path.join(__dirname, '/../data/data.json');
+      fs.writeFile(filePath, jsonString, function(err) {
+        if (err) {
+          console.error('Error writing file:', err);
+          res.status(500).send('Error generating data file');
+        } else {
+          res.download(filePath);
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error waiting for promises:', error);
+      res.status(500).send('Error generating data file');
+    });
 });
 
 router.get('/test/:id', function(req, res){

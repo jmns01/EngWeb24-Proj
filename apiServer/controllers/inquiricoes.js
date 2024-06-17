@@ -4,7 +4,8 @@ module.exports.list = () => {
     return Inquiricao
         .find()
         .sort({_id: 1})
-        .exec();
+        .exec()
+        .then(doc => doc ? doc : []);
 }
 
 module.exports.listPage = (limit, skip) => {

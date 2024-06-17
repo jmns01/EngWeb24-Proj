@@ -28,6 +28,12 @@ router.get('/getInquiricoesList', function(req, res, next) {
   }
 });
 
+router.get('/getAllInquiricoes', function(req, res, next) {
+  Inquiricao.list()
+    .then(dados => res.status(200).send(dados))
+    .catch(erro => res.status(500).send(erro));
+});
+
 router.get('/getInquiricao/:id', function(req, res, next) {
   Inquiricao.getInquiricaoById(req.params.id)
     .then(dados => res.status(200).send(dados))

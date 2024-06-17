@@ -16,6 +16,12 @@ router.get('/getPostsList', function(req, res, next) {
     }
 });
 
+router.get('/getAllPosts', function(req, res, next) {
+    Post.getAll()
+    .then(dados =>{console.log(dados); res.status(200).send(dados)})
+    .catch(erro => res.status(500).send(erro));
+});
+
 router.get('/getComments/:id', function(req, res, next) {   
     if(req.params.id){
         Post.getComments(req.params.id)

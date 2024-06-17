@@ -12,7 +12,13 @@ module.exports.list = () => {
         })
 }
 
-
+module.exports.getAllUsers = () => {
+    return User
+        .find()
+        .sort({username: 1})
+        .exec()
+        .then(doc => doc ? doc : []);
+}
 
 module.exports.getUser = username => {
     return User.findOne({username: username})

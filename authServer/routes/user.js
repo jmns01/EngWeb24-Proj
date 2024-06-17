@@ -15,6 +15,14 @@ router.get('/get', function(req, res){
     .catch(erro => res.status(502).jsonp({error: "Erro na obtenção da lista de users: " + erro}))
 })
 
+router.get('/getAllUsers', function(req, res){
+  User.getAllUsers()
+    .then(users => {
+      res.status(200).jsonp(users)
+    })
+    .catch(erro => res.status(500).jsonp({error: "Erro na obtenção da lista de users: " + erro}))
+});
+
 router.get('/get/:username', function(req, res){
   User.getUser(req.params.username)
     .then(user => {

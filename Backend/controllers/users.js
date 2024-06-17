@@ -1,15 +1,15 @@
 import model from '../models/users.js'
 
 function read_all(){
-    return model.find().exec();
+    return model.find({}, {password: 0}).exec();
 }
 
 function read_all_name(condition){
-    return model.find({name: condition}).exec();
+    return model.find({name: condition}, {password: 0}).exec();
 }
 
 function read(id){
-    return model.findOne({_id: id}).exec();
+    return model.findOne({_id: id}, {password: 0}).exec();
 }
 
 function create(data){

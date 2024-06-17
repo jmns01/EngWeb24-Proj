@@ -1,6 +1,20 @@
 extends includes/layout 
 
 block content 
+    .w3-card-4
+        header.w3-container.w3-light-blue
+            h1 #[b Inquirição de Génere - Trabalho Prático de EngWeb2024]
+            .w3-cell-row.w3-light-blue
+                .w3-cell
+                    if user != null
+                        h2 Bem-Vindo #{user.username}!
+                    else 
+                        h2 Bem-Vindo!
+                .w3-cell.w3-border-black.w3-border-top.w3-border-left(style="width:16% white-space: nowrap; max-width: 50px; overflow: hidden;") 
+                    if user != null
+                        h3 &nbsp;#[b Nível de Acesso:]  #{user.level}
+                    else
+                        h3 &nbsp;#[b Nível de Acesso:]  Não autenticado
     .w3-container
         .w3-cell(style="width:5%;")
             i.fa.fa-angle-right(style="color: #000000;")
@@ -18,30 +32,19 @@ block content
                                     .w3-container.w3-cell(style="width:90%; height: 80%")
                                         .w3-large #[b Lista de Inquirições de Génere]
                                             h6 Aceder e editar vários registos, assim como as publicações a eles referentes
-            if level == "Administrador"
+            if user.level == "Administrador"
                 li.w3-bar
                     span
                         .w3-bar-item
                             .w3-bar-item
-                                a(href="/addAdmin") 
-                                    span
-                                        .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
-                                            i.fa.fa-user-plus(style="color: #000000;")
-                                        .w3-container.w3-cell(style="width:90%; height: 80%")
-                                            .w3-large #[b Adicionar Administrador]
-                                                h6 Adicionar um novo perfil de administrador
-                li.w3-bar
-                    span
-                        .w3-bar-item
-                            .w3-bar-item
-                                a(href="/gerirContas") 
+                                a(href="/users") 
                                     span
                                         .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
                                             i.fa.fa-user-cog(style="color: #000000;")
                                         .w3-container.w3-cell(style="width:90%; height: 80%")
                                             .w3-large #[b Gestão de Contas]
                                                 h6 Editar e/ou remover contas de utilizadores
-            if is_logged
+            if user.is_logged
                 li.w3-bar
                     span
                         .w3-bar-item

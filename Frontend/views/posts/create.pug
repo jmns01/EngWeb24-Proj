@@ -1,0 +1,68 @@
+extends ../includes/layout
+
+block content
+    .w3-card-4
+        header.w3-container.w3-green
+            .w3-bar.w3-border-bottom
+                .w3-bar-item
+                    h2 #[b Trabalho Prático de EngWeb2024]
+                if is_logged
+                    a.w3-bar-item.w3-button.w3-right(href="/auth/login" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-sign-in-alt(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Login]
+                else
+                    a.w3-bar-item.w3-button(href="/" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-home(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Início]
+                    a.w3-bar-item.w3-button(href="/inquiries" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-folder-open(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Lista de Inquirições]
+                    if user.level == "Administrador"
+                        a.w3-bar-item.w3-button(href="/dashboard" style="position:relative; top:10px;")
+                            .w3-cell-row
+                                .w3-cell
+                                    i.fa.fa-cog(style="color: #000000;")
+                                .w3-cell(style="width:80%")
+                                    h6 #[b Mais Opções]
+                    .w3-bar-item.w3-right(style="display: flex; top:10px; justify-content: space-between; align-items: center;")
+                        h6 #{user.username}&nbsp;&nbsp;
+                        a.w3-button(href="/auth/logout" style="position:relative; top:1px; display: flex; align-items: center;")
+                            i.fa.fa-sign-out-alt(style="color: #000000;")
+                            h6 &nbsp;&nbsp;#[b Sair]
+            h3 &nbsp;&nbsp;&nbsp;#[b Adicionar uma publicação] 
+
+        form.w3-container(action="/posts/create" method="POST")
+            fieldset
+                legend Novo Post
+                label #[b >  Id do Processo]
+                input.w3-input.w3-round(type="text" name="inquiricaoId" value=`${inquiricaoId}` readonly)
+                label #[b >  Título da Publicação]
+                input.w3-input.w3-round(type="text" name="Title")
+                label #[b >  Data de Criação da Publicação] 
+                input.w3-input.w3-round(type="text" name="d" value=`${date}` readonly)
+                label #[b >  Conteúdo/Descrição]
+                input.w3-input.w3-round(type="text" name="Description")
+
+            .w3-panel
+                    .w3-cell-row
+                        .w3-cell
+                            button.w3-btn.w3-pale-blue.w3-mb-2.w3-border.w3-border-black.w3-hover-blue(type="submit")
+                                .w3-cell
+                                    i.fa.fa-sharp.fa-solid.fa-check.fa-lg
+                                .w3-cell(style="width:84%")
+                                    h5  &nbsp;&nbsp;#[b Criar Post]
+                        .w3-cell(style="width:89%")
+                            a.w3-btn.w3-pale-red.w3-mb-2.w3-hover-red.w3-border.w3-border-black(type="submit" href="/posts/"+inquiricaoId)
+                                    .w3-cell
+                                        i.fa.fa-solid.fa-arrow-left.fa-lg
+                                    .w3-cell(style="width:84%")
+                                        h5  &nbsp;&nbsp;#[b Voltar Atrás]

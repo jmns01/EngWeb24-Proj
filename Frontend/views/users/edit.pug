@@ -1,0 +1,47 @@
+extends ../includes/layout
+
+block content
+  .w3-card-4
+    header.w3-container.w3-blue
+      .w3-bar.w3-border-bottom
+          .w3-bar-item
+              h2 #[b Editar uma conta]
+          a.w3-bar-item.w3-button(href="/home" style="position:relative; top:10px;")
+                      .w3-cell-row
+                          .w3-cell
+                              i.fa.fa-home(style="color: #000000;")
+                          .w3-cell(style="width:80%")
+                              h6 #[b Início]
+
+    .w3-container
+      form.w3-container(action=`/users/edit` method="POST")
+        fieldset 
+            legend Infos:
+
+            label Id 
+                input.w3-input(type="text" name="id" value=u._id readonly)
+                
+            label Nome 
+                input.w3-input(type="text" name="name" value=u.name required)
+
+            label Username 
+                input.w3-input(type="text" name="username" value=u.username required)
+
+            label Password 
+                input.w3-input(type="password" name="password" value=u.password required)
+
+            label Data de Criação
+                input.w3-input(type='text' name='dateCreated' value=u.dateCreated readonly)
+
+            label Data de Último Acesso
+                input.w3-input(type='text' name='lastAccess' value=u.lastAccess readonly)
+
+        input.w3-btn.w3-blue.w3-margin(type="submit" value="Confirmar edição")
+
+        button#cancel.w3-btn.w3-round.w3-red.w3-margin
+          a(href="/") Voltar atrás
+
+      if erro != undefined
+        .w3-panel.w3-yellow
+          h3 Erro
+          p= erro

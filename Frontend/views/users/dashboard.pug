@@ -1,0 +1,76 @@
+extends ../includes/layout
+
+block content
+    .w3-card-4
+        header.w3-container.w3-light-blue
+            .w3-bar.w3-border-bottom
+                .w3-bar-item 
+                        h1 #[b Trabalho Prático de EngWeb2024]
+                        .w3-cell-row.w3-light-blue
+                            .w3-cell
+                                if user != null
+                                    h2 Bem-Vindo #{user.username}!
+                                else 
+                                    h2 Bem-Vindo!
+                a.w3-bar-item.w3-button(href="/" style="position:relative; top:10px;")
+                      .w3-cell-row
+                          .w3-cell
+                              i.fa.fa-home(style="color: #000000;")
+                          .w3-cell(style="width:80%")
+                              h6 &nbsp;&nbsp;&nbsp; #[b Início]
+            h3 &nbsp;&nbsp;&nbsp;#[b Opções de Disponíveis]
+
+        .w3-container
+            .w3-cell(style="width:5%;")
+                i.fa.fa-angle-right(style="color: #000000;")
+            .w3-cell(style="width:95%;")
+                h3 &nbsp;&nbsp;&nbsp;Escolha uma opção:
+            if user != null
+                if user.level == "Administrador"
+                    ul.w3-ul.w3-card-4
+                        li.w3-bar
+                            span
+                                .w3-bar-item
+                                    .w3-bar-item
+                                        a(href="/users") 
+                                            span
+                                                .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                                    i.fa.fa-user-cog(style="color: #000000;")
+                                                .w3-container.w3-cell(style="width:90%; height: 80%")
+                                                    .w3-large #[b Gestão de Contas]
+                                                        h6 Edite e/ou remova contas de utilizadores
+                        li.w3-bar
+                            span
+                                .w3-bar-item
+                                    .w3-bar-item
+                                        a(href="/state/export") 
+                                            span
+                                                .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                                    i.fa.fa-file-download(style="color: #000000;")
+                                                .w3-container.w3-cell(style="width:90%; height: 80%")
+                                                    .w3-large #[b Download de Dados]
+                                                        h6 Transfira os dados completos da aplicação
+                        li.w3-bar
+                            span
+                                .w3-bar-item
+                                    .w3-bar-item
+                                        a(href="/state/import") 
+                                            span
+                                                .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                                    i.fa.fa-file-upload(style="color: #000000;")
+                                                .w3-container.w3-cell(style="width:90%; height: 80%")
+                                                    .w3-large #[b Upload de Dados]
+                                                        h6 Faça o upload de dados para a aplicação
+                else
+                    ul.w3-ul.w3-card-4
+                        li.w3-bar
+                            span
+                                .w3-bar-item
+                                    .w3-bar-item
+                                        a(href="/" + user.id + "/edit") 
+                                            span
+                                                .w3-container.w3-cell(style="width:10%; height: 80%; font-size: 24px;")
+                                                    i.fa.fa-user-plus(style="color: #000000;")
+                                                .w3-container.w3-cell(style="width:90%; height: 80%")
+                                                    .w3-large #[b Edite o seu Perfil]
+                                                        h6 Mude o seu nome ou username                                

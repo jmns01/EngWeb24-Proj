@@ -45,6 +45,24 @@ mongoimport --db EngWeb --collection users --file utilizadores.json --jsonArray
 
 `DELETE /api/inquiries/{id}`🔒🔒 - Eliminar registo de inquirição.
 
+### Posts & Comments
+
+`GET /api/posts` - Lista de todas as publicações.
+
+`GET /api/posts/{id}` - Informação de uma publicação.
+
+`POST /api/posts`🔒 - Criar novo registo de publicação.
+
+`PUT /api/posts/{id}`🔒 - Atualizar dados de publicação.
+
+`DELETE /api/posts/{id}`🔒🔒 - Eliminar registo de publicação.
+
+`GET /api/posts/{id}/comments` - Lista de todos os comentários de uma publicação.
+
+`POST /api/posts/{id}/comments`🔒 - Cria novo comentário na publicação.
+
+`DELETE /api/posts/{id}/comments/{id-comentario}`🔒🔒 - Elimina comentário da publicação.
+
 ## Frontend - localhost:8888
 
 `GET localhost:8888/signup` - Criar nova conta de utilizador.

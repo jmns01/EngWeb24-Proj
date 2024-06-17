@@ -2,9 +2,16 @@ extends ../includes/layout
 
 block content
   .w3-card-4
-    .w3-container
-      h1 Login
-
+    header.w3-container.w3-blue
+      .w3-bar.w3-border-bottom
+          .w3-bar-item
+              h2 #[b Iniciar sessão]
+          a.w3-bar-item.w3-button(href="/" style="position:relative; top:10px;")
+            .w3-cell-row
+                .w3-cell
+                    i.fa.fa-home(style="color: #000000;")
+                .w3-cell(style="width:80%")
+                    h6 #[b Início]
     .w3-container  
       form.w3-container(action="/auth/login" method="POST")
         fieldset 

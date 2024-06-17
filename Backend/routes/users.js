@@ -42,7 +42,7 @@ router.delete('/:id', is_admin, (req, res) => {
 
 router.get('/export', is_admin, (req, res) => {
     controller.export_data()
-    .then(data => res.send(data))
+    .then(data => res.jsonp(data))
     .catch(error => res.jsonp(error))
 })
 

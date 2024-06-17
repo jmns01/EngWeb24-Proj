@@ -9,15 +9,15 @@ import auth from './routes/auth.js';
 import {is_admin} from './includes/permissions.js'
 import {retrieve_user_data} from './includes/retrieve_data.js'
 
-var multer = require('multer');
+import multer from 'multer';
 var upload = multer({dest: 'uploads'})
-const Ajv = require('ajv');
+import Ajv from 'ajv';
 
 // Coisas para upload de ficheiros
 const ajv = new Ajv();
 
 // Load the JSON schema
-const schemaPath = path.join(__dirname, '../manifest.json');
+const schemaPath = './manifest.json';
 const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 const validate = ajv.compile(schema);
 
@@ -111,12 +111,10 @@ app.get('/import', is_admin, (req, res, next) => {
     });
 });
 
-app.post('/import', upload.single('myFile'), (req, res) => {
-    console.log('cdir: ' + __dirname)
-    let oldPath = __dirname + '/../' + req.file.path;
-    console.log("old: " + oldPath)
-    let newPath = __dirname + '/../public/fileStore/' + req.file.originalname
-    console.log("new: " + newPath)
+app.post('/import', is_admin, upload.single('myFile'), (req, res) => {
+
+    let oldPath = req.file.path;
+    let newPath = './public/fileStore/' + req.file.originalname
 
     fs.rename(oldPath, newPath, function(error){
         if(error) throw error
@@ -154,7 +152,7 @@ app.post('/import', upload.single('myFile'), (req, res) => {
                 Promise.all([addInquiricoesReq, addPostsReq, addUsersReq])
                 .then(() => {
                     console.log('Inquirições, posts e utilizadores adicionados com sucesso');
-                    res.status(200).redirect('/getInquiricoesList');
+                    res.status(200).redirect('/inquiries');
                 })
                 .catch(error => {
                     console.error('Error adding data:', error);

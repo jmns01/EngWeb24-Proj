@@ -40,6 +40,108 @@ router.put('/updateInquiricao/:id', function(req, res, next) {
     .catch(erro => res.status(500).send(erro));
 });
 
+router.post('/addInquiricao', function(req, res, next) {
+  const defaultInquiricao = {
+    _id: 0,
+    DescriptionLevel: "",
+    EntityType: "",
+    CompleteUnitId: "",
+    UnitId: 0,
+    RepositoryCode: "",
+    CountryCode: "",
+    UnitTitleType: "",
+    UnitTitle: "",
+    AlternativeTitle: "",
+    NormalizedFormsName: "",
+    OtherFormsName: "",
+    UnitDateInitial: "",
+    UnitDateFinal: "",
+    UnitDateInitialCertainty: false,
+    UnitDateFinalCertainty: false,
+    AllowUnitDatesInference: false,
+    AccumulationDates: "",
+    UnitDateBulk: "",
+    UnitDateNotes: "",
+    Dimensions: "",
+    AllowExtentsInference: false,
+    Repository: "",
+    Producer: "",
+    Author: "",
+    MaterialAuthor: "",
+    Contributor: "",
+    Recipient: "",
+    BiogHist: "",
+    GeogName: "",
+    LegalStatus: "",
+    Functions: "",
+    Authorities: "",
+    InternalStructure: "",
+    GeneralContext: "",
+    CustodHist: "",
+    AcqInfo: "",
+    Classifier: "",
+    ScopeContent: "",
+    Terms: "",
+    DocumentalTradition: "",
+    DocumentalTypology: "",
+    Marks: "",
+    Monograms: "",
+    Stamps: "",
+    Inscriptions: "",
+    Signatures: "",
+    Appraisal: "",
+    AppraisalElimination: "",
+    AppraisalEliminationDate: "",
+    Accruals: "",
+    Arrangement: "",
+    AccessRestrict: "",
+    UseRestrict: "",
+    PhysLoc: "",
+    OriginalNumbering: "",
+    PreviousLoc: "",
+    LangMaterial: "",
+    PhysTech: "",
+    OtherFindAid: "",
+    ContainerTypeTerm: "",
+    OriginalsLoc: "",
+    AltFormAvail: "",
+    RelatedMaterial: "",
+    Note: "",
+    AllowTextualContentInference: false,
+    TextualContent: "",
+    RetentionDisposalDocumentState: "",
+    ApplySelectionTable: false,
+    RetentionDisposalPolicy: "",
+    RetentionDisposalReference: "",
+    RetentionDisposalClassification: "",
+    RetentionDisposalPeriod: "",
+    RetentionDisposalApplyDate: "",
+    RetentionDisposalFinalDestination: "",
+    RetentionDisposalObservations: "",
+    DescRules: "",
+    Revised: false,
+    Published: false,
+    Available: false,
+    Highlighted: false,
+    Creator: "",
+    Created: "",
+    Username: "",
+    ProcessInfoDate: "",
+    OtherDescriptiveData: "",
+    ProcessInfo: "",
+    Relations: []
+  };
+
+  const newInquiricao = {
+    ...defaultInquiricao,
+    ...req.body
+  };
+  console.log(newInquiricao);
+  Inquiricao.insertInquiricao(newInquiricao)
+  .then(dados => res.status(200).send(dados))
+  .catch(erro => res.status(500).send(erro));
+});
+
 router.delete('/deleteInquiricao/:id', function(req, res, next) {
   Inquiricao.deleteInquiricao(req.params.id)
     .then(dados => res.status(200).send(dados))
@@ -99,6 +201,16 @@ router.delete('/deleteRelation/:inquiricaoId/:relationName', function(req, res, 
   Inquiricao.removeRelation(req.params.inquiricaoId, req.params.relationName)
     .then(dados => res.status(200).send(dados))
     .catch(erro => res.status(500).send(erro));
+});
+
+router.get('/getMaxId', function(req, res) {
+  Inquiricao.getMaxId().then(id => {
+      console.log(id);
+      res.send(id.toString());
+  }).catch(err => {
+      console.error(err);
+      res.sendStatus(500);
+  });
 });
 
 module.exports = router;

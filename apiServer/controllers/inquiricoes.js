@@ -60,6 +60,11 @@ module.exports.deleteInquiricao = id => {
         .exec();
 }
 
+module.exports.insertInquiricao = (inquiricao) => {
+    return Inquiricao
+    .create(inquiricao)
+}
+
 module.exports.getRelation = (id) => {
     return Inquiricao
         .findOne({_id: id}, {Relations: 1, _id: 0})
@@ -93,4 +98,13 @@ module.exports.removeRelation = (id, name) => {
     return Inquiricao
         .findOneAndUpdate({_id: id}, {$pull: {Relations: {key: name}}})
         .exec()
+}
+
+module.exports.getMaxId = () => {
+    return Inquiricao
+        .find({}, {_id: 1})
+        .sort({_id: -1})
+        .limit(1)
+        .exec()
+        .then(doc => doc && doc.length > 0 ? doc[0]._id : 0);
 }

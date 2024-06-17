@@ -115,6 +115,34 @@ router.get('/inquiricao/:id', function(req, res){
   });
 });
 
+router.get('/addInquiricao', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  axios.get('http://localhost:7777/getMaxId')
+  .then(resp => {
+    res.status(200).render('addInquiricao', {type: 'Administrador', userName: 'jmns', name : "Joao", date: d, newId: parseInt(resp.data)+1})
+  })
+  .catch(erro => {
+    console.log('Erro na obtenção do id da inquiricao: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.post('/addInquiricao', function(req, res){
+  const {id, descLevel, unitId, repoCod, coutryCod, title, initDate, endDate, repo, scopeContent, cotaAtual, cotaAntiga, revised, publish, available, creator, created, creatorUsername} = req.body
+  const newrevised = revised === "Sim" ? true : false;
+  const newpublish = publish === "Sim" ? true : false;
+  const newavailable = available === "Sim" ? true : false;
+  axios.post('http://localhost:7777/addInquiricao', {_id: parseInt(id), DescriptionLevel: descLevel, CompleteUnitId: unitId, RepositoryCode: repoCod, CountryCode: coutryCod, UnitTitle: title, UnitDateInitial: initDate, UnitDateFinal: endDate, Repository: repo, ScopeContent: scopeContent, PhysLoc: cotaAtual, PreviousLoc: cotaAntiga, Revised: newrevised, Published: newpublish, Available: newavailable, Creator: creator, Created: created, Username: creatorUsername})
+  .then(response => {
+    console.log('Inquirição adicionada com sucesso');
+    res.redirect('/getInquiricoesList');
+  })
+  .catch(error => {
+    console.error('Erro ao adicionar inquirição:', error);
+    res.status(500).render("error", {error: error});
+  });
+});
+
 router.get('/deleteInquiricao/:id', function(req, res){
   axios.delete(`http://localhost:7777/deleteInquiricao/${req.params.id}`)
   .then(response => {

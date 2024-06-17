@@ -33,4 +33,16 @@ function remove(){
     return model.findOneAndDelete({_id: id}).exec();
 }
 
-export default {read_all, read_all_name, read_all_local, read_all_date, read, create, update, remove}
+function export_data(){
+    return model.find().sort({_id: 1}).exec().then(doc => doc ? doc : []);
+}
+
+function import_data(data){
+    return model.insertMany(data).exec();
+}
+
+function delete_all(){
+    return model.deleteMany().exec();
+}
+
+export default {read_all, read_all_name, read_all_local, read_all_date, read, create, update, remove, export_data, import_data, delete_all}

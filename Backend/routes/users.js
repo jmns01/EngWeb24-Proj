@@ -40,4 +40,17 @@ router.delete('/:id', is_admin, (req, res) => {
     .catch(error => res.jsonp(error));
 })
 
+router.get('/export', is_admin, (req, res) => {
+    controller.export_data()
+    .then(data => res.send(data))
+    .catch(error => res.jsonp(error))
+})
+
+router.post('/import', is_admin, (req, res) => {
+    controller.delete_all()
+    controller.import_data(req.body)
+    .then(data => res.send(data))
+    .catch(error => res.jsonp(error))
+})
+
 export default router;

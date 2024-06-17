@@ -1,0 +1,151 @@
+{
+    "type": "object",
+    "properties": {
+      "inquiricoes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "number" },
+            "DescriptionLevel": { "type": "string" },
+            "EntityType": { "type": "string" },
+            "CompleteUnitId": { "type": "string" },
+            "UnitId": { "type": "number" },
+            "RepositoryCode": { "type": "string" },
+            "CountryCode": { "type": "string" },
+            "UnitTitleType": { "type": "string" },
+            "UnitTitle": { "type": "string" },
+            "AlternativeTitle": { "type": "string" },
+            "NormalizedFormsName": { "type": "string" },
+            "OtherFormsName": { "type": "string" },
+            "UnitDateInitial": { "type": "string" },
+            "UnitDateFinal": { "type": "string" },
+            "UnitDateInitialCertainty": { "type": "boolean" },
+            "UnitDateFinalCertainty": { "type": "boolean" },
+            "AllowUnitDatesInference": { "type": "boolean" },
+            "AccumulationDates": { "type": "string" },
+            "UnitDateBulk": { "type": "string" },
+            "UnitDateNotes": { "type": "string" },
+            "Dimensions": { "type": "string" },
+            "AllowExtentsInference": { "type": "boolean" },
+            "Repository": { "type": "string" },
+            "Producer": { "type": "string" },
+            "Author": { "type": "string" },
+            "MaterialAuthor": { "type": "string" },
+            "Contributor": { "type": "string" },
+            "Recipient": { "type": "string" },
+            "BiogHist": { "type": "string" },
+            "GeogName": { "type": "string" },
+            "LegalStatus": { "type": "string" },
+            "Functions": { "type": "string" },
+            "Authorities": { "type": "string" },
+            "InternalStructure": { "type": "string" },
+            "GeneralContext": { "type": "string" },
+            "CustodHist": { "type": "string" },
+            "AcqInfo": { "type": "string" },
+            "Classifier": { "type": "string" },
+            "ScopeContent": { "type": "string" },
+            "Terms": { "type": "string" },
+            "DocumentalTradition": { "type": "string" },
+            "DocumentalTypology": { "type": "string" },
+            "Marks": { "type": "string" },
+            "Monograms": { "type": "string" },
+            "Stamps": { "type": "string" },
+            "Inscriptions": { "type": "string" },
+            "Signatures": { "type": "string" },
+            "Appraisal": { "type": "string" },
+            "AppraisalElimination": { "type": "string" },
+            "AppraisalEliminationDate": { "type": "string" },
+            "Accruals": { "type": "string" },
+            "Arrangement": { "type": "string" },
+            "AccessRestrict": { "type": "string" },
+            "UseRestrict": { "type": "string" },
+            "PhysLoc": { "type": "string" },
+            "OriginalNumbering": { "type": "string" },
+            "PreviousLoc": { "type": "string" },
+            "LangMaterial": { "type": "string" },
+            "PhysTech": { "type": "string" },
+            "OtherFindAid": { "type": "string" },
+            "ContainerTypeTerm": { "type": "string" },
+            "OriginalsLoc": { "type": "string" },
+            "AltFormAvail": { "type": "string" },
+            "RelatedMaterial": { "type": "string" },
+            "Note": { "type": "string" },
+            "AllowTextualContentInference": { "type": "boolean" },
+            "TextualContent": { "type": "string" },
+            "RetentionDisposalDocumentState": { "type": "string" },
+            "ApplySelectionTable": { "type": "boolean" },
+            "RetentionDisposalPolicy": { "type": "string" },
+            "RetentionDisposalReference": { "type": "string" },
+            "RetentionDisposalClassification": { "type": "string" },
+            "RetentionDisposalPeriod": { "type": "string" },
+            "RetentionDisposalApplyDate": { "type": "string" },
+            "RetentionDisposalFinalDestination": { "type": "string" },
+            "RetentionDisposalObservations": { "type": "string" },
+            "DescRules": { "type": "string" },
+            "Revised": { "type": "boolean" },
+            "Published": { "type": "boolean" },
+            "Available": { "type": "boolean" },
+            "Highlighted": { "type": "boolean" },
+            "Creator": { "type": "string" },
+            "Created": { "type": "string" },
+            "Username": { "type": "string" },
+            "ProcessInfoDate": { "type": "string" },
+            "OtherDescriptiveData": { "type": "string" },
+            "ProcessInfo": { "type": "string" },
+            "Relations": {
+              "type": "array",
+              "items": { "type": "object" }
+            }
+          },
+          "required": ["_id", "DescriptionLevel", "CompleteUnitId", "UnitId", "RepositoryCode", "CountryCode", "UnitTitle", "UnitDateInitial", "UnitDateFinal", "Repository", "Creator", "Created", "Username"]
+        }
+      },
+      "posts": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "number" },
+            "inquiricaoId": { "type": "number" },
+            "Author": { "type": "string" },
+            "Date": { "type": "string" },
+            "Title": { "type": "string" },
+            "Description": { "type": "string" },
+            "Comments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "Autor": { "type": "string" },
+                  "Date": { "type": "string" },
+                  "Title": { "type": "string" },
+                  "Description": { "type": "string" },
+                  "_id": { "type": "string" }
+                },
+                "required": ["Autor", "Date", "Title", "Description", "_id"]
+              }
+            }
+          },
+          "required": ["_id", "inquiricaoId", "Author", "Date", "Title", "Description"]
+        }
+      },
+      "users": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "name": { "type": "string" },
+            "username": { "type": "string" },
+            "password": { "type": "string" },
+            "level": { "type": "string" },
+            "dateCreated": { "type": "string" },
+            "lastAccess": { "type": "string" },
+            "active": { "type": "boolean" }
+          },
+          "required": ["_id", "name", "username", "password", "level", "dateCreated", "lastAccess", "active"]
+        }
+      }
+    }
+  }

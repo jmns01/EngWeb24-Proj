@@ -1,11 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken')
-var passport = require('passport')
-var userModel = require('../models/user')
 var auth = require('../auth/auth')
+var jwt = require('jsonwebtoken')
+var dotenv = require('dotenv')
 
 var User = require('../controllers/user')
+
+function generate_token(data){
+  return jwt.sign(data, process.env.JWT_SECRET_KEY, {expiresIn: '3000s'})
+}
 
 router.get('/get', auth.is_admin, function(req, res){
   User.list()
@@ -57,71 +61,30 @@ router.put('/edit/user/:username', auth.verify_token, function(req, res){
 
 router.post('/register',function(req, res) {
   var d = new Date().toISOString().substring(0,19)
-  userModel.register(new userModel({ email: req.body.email, name: req.body.name,
-                                     username: req.body.username, level: req.body.level,
-                                     dateCreated: d, active: true, profilePic: req.body.profilePic }), 
-                req.body.password, 
-                function(err, user) {
-                  if (err) 
-                    res.jsonp({error: err, message: "Register error: " + err})
-                  else{
-                    res.status(200).jsonp({message: "Utilizador criado com sucesso!"})
-                     passport.authenticate("local")(req,res,function(){
-                      jwt.sign({ username: req.user, level: req.user.level, 
-                        sub: 'aula de EngWeb2023'}, 
-                        "EngWeb2023",
-                         {expiresIn: 3600},
-                       function(e, token) {
-                           if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
-                        else res.status(201).jsonp({token: token})
-                         });
-                     })
-                  }     
+  req.body.level = "Consumidor"
+  req.body.dateCreated = new Date().toISOString().substring(0, 16);
+  req.body.lastAccess = new Date().toISOString().substring(0, 16);
+  User.addUser(req.body)
+  .then(data => {
+      const token = generate_token({name: data.name, username: data.username, level: data.level})
+      res.jsonp({name: data.name, username: data.username, level: data.level, token: token})
   })
+  .catch(error => res.jsonp(error));
 })
-/*
-Este router é usado para fazer o login caso não tenhamos a funcionar a ATIVAÇÃO e a DESATIVAÇÃO de users
-router.post('/login', passport.authenticate('local'), function(req, res){
-    jwt.sign({ username: req.user.username, level: req.user.level, 
-      sub: 'aula de EngWeb2023'}, 
-      "EngWeb2023",
-      {expiresIn: 3600},
-      function(e, token) {
-        if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
-        else res.status(201).jsonp({token: token})
-    });
 
-})
-*/
 router.post('/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user) {
-    if (err) {
-      return res.status(500).jsonp({ error: 'Erro no servidor.' });
-    }
-    if (!user || !user.active) {
-      return res.status(401).jsonp({ error: 'Acesso não permitido para este utilizador.' });
-    }
-
-    req.logIn(user, function(err) {
-      if (err) {
-        return res.status(500).jsonp({ error: 'Erro ao fazer o login.' });
+  User.loginUser(req.body)
+  .then(data => {
+      if(data != null){
+        const token = generate_token({name: data.name, username: data.username, level: data.level})
+        res.jsonp({name: data.name, username: data.username, level: data.level, token: token})                        
+      }else{
+          res.sendStatus(401)
       }
-
-      jwt.sign(
-        { username: req.user, level: req.user.level, sub: 'EngWeb2024' },
-        'EngWeb2024',
-        { expiresIn: 3600 },
-        function(e, token) {
-          if (e) {
-            return res.status(500).jsonp({ error: 'Erro na geração do token: ' + e });
-          } else {
-            return res.status(201).jsonp({ token: token });
-          }
-        }
-      );
-    });
-  })(req, res, next);
+  })
+  .catch(error => res.jsonp(error));
 });
+
 router.delete('/delete/user/:username', auth.is_admin,function(req,res){
   User.deleteUser(req.params.username)
     .then(dados => res.jsonp(dados))

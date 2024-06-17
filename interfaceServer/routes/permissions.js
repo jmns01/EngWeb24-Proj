@@ -1,4 +1,4 @@
-import { retrieve_user_data } from "./retrieve_data.js";
+var retrieve_user_data = require("./retrieve_data.js");
 var axios = require('axios')
 
 // Usar em casos que só admin tem permissão.

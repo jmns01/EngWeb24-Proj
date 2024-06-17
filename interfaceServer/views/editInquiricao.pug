@@ -119,16 +119,16 @@ block content
                                                     i.fa.fa-trash-alt(style="color: #000000;")
                                                 .w3-cell(style="width:80%")
                                                     h9 &nbsp;&nbsp; #[b Eliminar]
+        input.w3-btn.w3-blue.w3-margin(type="submit" value="Editar")
+
+        button#cancel.w3-btn.w3-round.w3-red.w3-margin
+          a(href="/getInquiricoesList") Voltar atrás
+
     .w3-container
         .w3-bar-item.w3-right(style="display: flex; top:10px; justify-content: space-between; align-items: center;")
             button#addRelation.w3-button(onclick=`openAddrelationModal(${inquiricao._id})`)
                 i.fa.fa-plus(style="color: #000000;")
                 h6 &nbsp;&nbsp;#[b Adicionar Relação]
-
-        input.w3-btn.w3-blue.w3-margin(type="submit" value="Editar")
-
-        button#cancel.w3-btn.w3-round.w3-red.w3-margin
-          a(href="/getInquiricoesList") Voltar atrás
 
     footer.w3-container.w3-blue.w3-center
         h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho

@@ -2,7 +2,7 @@ extends layout
 
 block content
   .w3-card-4 
-    header.w3-container.w3-green
+    header.w3-container.w3-blue
       .w3-bar.w3-border-bottom
           .w3-bar-item
               h2 #[b Trabalho Prático de EngWeb2024]
@@ -110,20 +110,20 @@ block content
     .w3-bar
       if filterType == "Not filtered"
         a.w3-button(href=`/getInquiricoesList?page=${page > 1 ? page - 1 : 1}`) Anterior
-        a.w3-button.w3-green #{page}
+        a.w3-button.w3-blue #{page}
         a.w3-button(href=`/getInquiricoesList?page=${page + 1}`) Próximo
       else if filterType == "name"
         a.w3-button(href=`/getInquiricoesList?filter=fNome&name=${value}&page=${page > 1 ? page - 1 : 1}`) Anterior
-        a.w3-button.w3-green #{page}
+        a.w3-button.w3-blue #{page}
         a.w3-button(href=`/getInquiricoesList?filter=fNome&name=${value}&page=${page + 1}`) Próximo
       else if filterType == "local"
         a.w3-button(href=`/getInquiricoesList?filter=fLocal&local=${value}&page=${page > 1 ? page - 1 : 1}`) Anterior
-        a.w3-button.w3-green #{page}
+        a.w3-button.w3-blue #{page}
         a.w3-button(href=`/getInquiricoesList?filter=fLocal&local=${value}&page=${page + 1}`) Próximo
       else if filterType == "date"
         a.w3-button(href=`/getInquiricoesList?filter=fData&date=${value}&page=${page > 1 ? page - 1 : 1}`) Anterior
-        a.w3-button.w3-green #{page}
+        a.w3-button.w3-blue #{page}
         a.w3-button(href=`/getInquiricoesList?filter=fData&date=${value}&page=${page + 1}`) Próximo
-    footer.w3-container.w3-green.w3-center
+    footer.w3-container.w3-blue.w3-center
       h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
       h5 Generado por EngWeb2024 in #{date}

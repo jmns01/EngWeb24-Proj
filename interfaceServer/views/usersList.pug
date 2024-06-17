@@ -2,7 +2,7 @@ extends layout
 
 block content
     .w3-card-4
-        header.w3-container.w3-green
+        header.w3-container.w3-blue
             .w3-bar.w3-border-bottom
                 .w3-bar-item
                     h2 #[b Trabalho Prático de EngWeb2024]
@@ -45,13 +45,13 @@ block content
                     h3 #[b Nº de Users:] #{lista.length} 
                 .w3-cell
                     a(href="/register")
-                        button.w3-btn.w3-pale-green.w3-border.w3-border-black.w3-hover-green.w3-round
+                        button.w3-btn.w3-pale-blue.w3-border.w3-border-black.w3-hover-blue.w3-round
                             .w3-cell
                                 i.fa.fa-sharp.fa-solid.fa-user-plus.fa-2xl
                             .w3-cell(style="width:84%")
                                 h4 &nbsp;&nbsp;#[b Criar Utilizador]
                     a(href="/addAdmin")
-                        button.w3-btn.w3-pale-green.w3-border.w3-border-black.w3-hover-green.w3-round
+                        button.w3-btn.w3-pale-blue.w3-border.w3-border-black.w3-hover-blue.w3-round
                             .w3-cell
                                 i.fa.fa-sharp.fa-solid.fa-user-plus.fa-2xl
                             .w3-cell(style="width:84%")
@@ -88,6 +88,6 @@ block content
                                                 i.fa.fa-solid.fa-trash
                                             .w3-cell(style="width:84%")
                                                 h6 &nbsp;&nbsp;Apagar User
-        footer.w3-container.w3-green.w3-center
+        footer.w3-container.w3-blue.w3-center
             h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
             h5 Generado por EngWeb2024 in #{date}

@@ -1,69 +1,95 @@
-# Relatório
+# EngWeb24-Proj
 
-## Elementos do grupo de trabalho
-. André Pimentel Filipe - A96890
-. David da Silva Teixeira - A100554
-. João Henrique Costa Ferreira - A96854
-. João Manuel Novais da Silva - A91671
+Trabalho Prático de EngWeb2024 realizado por :
+
+- André Pimentel Filipe - A96890
+- David da Silva Teixeira - A100554
+- João Henrique Costa Ferreira - A96854
+- João Manuel Novais da Silva - A91671
 
 ## Introdução
 
-O nosso grupo, para o trabalho prático de Engenharia Web do 2024, escolheu a proposta 2 - Inquirições de Génere.
+Este documento serve como relatório para o projeto da Unidade Curricular de Engenharia Web, do 3º ano da Licenciatura em Engenharia Informática.
 
-O objetivo para este tema é desenvolver uma plataforma que sirva para partilhar e gerir inquirições de testemunhas para comprovar a filiação, reputação, bom nome ou "limpeza de sangue" do requerente. Foi usado o modelo OAIS (Open Archival Information System) como sistema para divulgação, disseminação, gestão e armazenamento dos recursos.
+Ao longo deste relatório vamos explicar o nosso raciocínio, as nossas interpretações e a nossa resolução do problema dado no enunciado.
 
-Neste relatório vamos abordar como está organizada a aplicação, de que maneira os dados são guardados e geridos e as funcionalidades implementadas na plataforma.
+O relatório está dividido em 4 partes, cada uma das pastas deste repositório representa uma divisão do trabalho.
+
+- São elas respetivamente:
+1. [Estrutura/Arquitetura da plataforma](https://github.com/jmns01/EngWeb24-Proj/blob/andre/arquitetura.png)
+2. [Tratamento de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/data)
+3. [API de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/apiServer)
+4. [Front-end](https://github.com/jmns01/EngWeb24-Proj/tree/main/interfaceServer)
+5. [Servidor de Autenticação](https://github.com/jmns01/EngWeb24-Proj/tree/main/authServer)
+
+O tema escolhido pelo nosso grupo foi o [Inquirições de Génere](colocar link do git com o enunciado).
 
 ## Estrutura/Arquitetura da plataforma
 
-Começou-se por organizar os servidores em duas pastas, Backend (para servidores que respondem a pedidos diretamente sem recurso a uma interface) e Frontend (que premitem a interação direta com o utilizador). Os servidores relacionam-se para responder aos vários pedidos que um utilizador possa fazer.
+Esta arquitetura é construída por 3 servidores: **interfaceServer**, **apiServer** e **authServer**. Cada um serve um propósito bem definido e a comunicação entre eles é fundamental para conceber a plataforma pretendida.
 
-### Backend
+![estrutura](https://github.com/jmns01/EngWeb24-Proj/blob/andre/arquitetura.png)
 
-O Backend possui os servidores responsáveis por gerir toda a informação sobre os recursos (desde inquirições e utilizadores). Gerir esta informação inclui: criar, editar, listar e remover recursos. Para isso, foram criadas 2 coleções diferentes na base de dados da plataforma cada uma para cada tipo de entidade.
+## [Tratamento de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/data)
 
-Para além disto, o servidor responsável pelos servidor é responsável por gerar um jwt (Json Web Token) para cada utilizador se autenticar com sucesso na plataforma. Este token é posteriormente passado para o servidor da plataforma ("App") para que o cliente possa-o guardar nas suas cookies. Este token serve para todos os servidores verificarem se um dado utilizador está autenticado ou não, e para além disso, verificarem, também, o username, password e nível de acesso (todos estes campos são guardados no payload do token). Desta forma, a autenticação de utilizadores e os diferentes níveis de acesso dos mesmos são implementados.
+### Script *csv_json_parser.py*
 
-Este servidor não gera qualquer tipo de interface apenas responde aos pedidos deste servidor consultando a base de dados.
+Recebendo o ficheiro de dados em formato [.csv](https://github.com/jmns01/EngWeb24-Proj/blob/main/data/PT-UM-ADB-DIO-MAB-006.CSV) teríamos não só de o tratar como passar para [.json](colocar o link do db.json) e para isso utilizamos uma ***[script](https://github.com/jmns01/EngWeb24-Proj/blob/main/data/csv_json_parser.py)*** escrita na linguagem *python*, há semelhança do que já tínhamos feito em aulas da UC.
 
-### Frontend
+### Script *analise.py*
 
-O Frontend contém a interface da plataforma que conecta todas as outras componentes (Backend) e também responsável por ser o servidor que comunica diretamente com o utilizador.
+O arquivo **analise.py** contém um conjunto de funções para analisar um arquivo JSON e extrair valores únicos. Abaixo está uma descrição detalhada de suas funcionalidades:
+- São elas respetivamente:
+1. make_hashable: Converte listas em tuplas de forma recursiva para garantir que sejam "hashable" (ou seja, que possam ser usadas em conjuntos e como chaves de dicionários).
+2. list_unique_values: Lê um arquivo JSON, extrai valores únicos de cada campo do JSON e armazena esses valores únicos em um dicionário onde as chaves são os nomes dos campos e os valores são conjuntos de valores únicos.
+3. save_unique_values_to_json: Guarda o dicionário de valores únicos em um novo arquivo JSON.
 
-Este servidor trata de todos os pedidos do utilizador e usa como suporte os outros servidores para dar resposta aos pedidos do utilizador.
+## [API de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/apiServer)
 
-Mais concretamente, este servidor faz pedidos ao Backend para obter informação sobre os recursos, as notícias, os posts, autenticar utilizadores, editar os perfis e ter níveis de acesso diferentes para cada utilizador (Administrador, Produtor e Consumidor)
+A resolução desta parte, à semelhança das outras, está de acordo com o feito nas aulas práticas. Sendo uma API de dados, serve principalmente para devolver os dados da base de dados de acordo com os vários critérios. Utilizando a base de dados guardada em mongoDB, utilizamos o módulo mongoose para conectarmo-nos à base de dados. De seguida, tratamos da criação dos [modelos](https://github.com/jmns01/EngWeb24-Proj/blob/main/apiServer/models/inquiricao.js) dos vários objetos da BD.
 
-## Dados
+## [Front-end(interfaceServer)](https://github.com/jmns01/EngWeb24-Proj/tree/main/interfaceServer)
 
-Decidiu-se usar uma Base de Dados não relacional recorrendo ao MongoDB. A base de dados chama-se 'inquiricoes', nela criamos 2 coleções: users, inquiricoes.
+O interfaceServer é o principal servidor na plataforma por ser o servidor que conecta todas as outras componentes e também por ser o servidor que comunica diretamente com o utilizador.
 
-Passamos agora à explicação de cada uma.
+Este servidor trata de todos os pedidos do utilizador e usa como suporte os outros dois servidores (authServer e apiServer) para dar resposta aos pedidos do utilizador.
 
-### Users
+Mais concretamente, este servidor faz pedidos ao apiServer para obter informação sobre as inquirições, os comentários e posts. Faz pedidos ao authServer para obter informação sobre os utilizadores para puder fazer várias coisas como autenticar utilizadores, editar os perfis e ter níveis de acesso diferentes para cada utilizador (admin e default).
 
-Esta coleção é responsável por guardar os dados de todos os utilizadores da plataforma. Mais concretamente, cada documento desta coleção tem a seguinte estrutura:
+## [Servidor de Autenticação](https://github.com/jmns01/EngWeb24-Proj/tree/main/authServer)
 
-    .*name*: string que representa o nome do utilizador;
-    .*username*: string que representa o nome do utilizador na plataforma;
-    .*password*: string que guarda a palavra-passe do utilizador;
-    .*level*: string que representa o tipo de utilizador (Administrador, Produtor e Consumidor);
-    .*dateCreated*: string que guarda a data de criação da conta;
-    .*lastAccess*: string que guarda a data de último acesso à plataforma;
+O authServer é o servidor encarregado de administrar todas as informações sobre os utilizadores. A gestão dessas informações envolve: criar, editar, listar, desativar e ativar utilizadores. Para isso, foi criada uma coleção na base de dados para armazenar as informações dos diversos utilizadores.
 
-Desta maneira, toda a informação de cada utilizador é guardada na Base de Dados. O ficheiro que é a foto de perfil do utilizador está guardado no file system, o campo "profilePic" apenas tem o nome desse ficheiro.
+Além disso, este servidor é responsável por gerar um JWT (Json Web Token) para cada utilizador que se autenticar com sucesso na plataforma. Este token é então enviado para o interfaceServer para que o cliente possa armazená-lo as suas cookies. Este token permite que todos os servidores verifiquem se um determinado utilizador está autenticado, além de conferir o nome de utilizador, nível de acesso e se está ativo (todos esses campos são armazenados no payload do token). Assim, a autenticação de utilizadores e os diferentes níveis de acesso são implementados.
 
-### Inquirições
+Diferente do interfaceServer, este servidor não gera nenhum tipo de interface, apenas responde às solicitações deste servidor consultando o banco de dados.
 
-As inquirições possuem demasiados campos. Então mostraremos somente aqueles que entendemos serem os mais importantes:
+## [Funcionalidades implementadas]
 
-    .*UnitTitle*: String que guarda o nome da Inquirição;
-    .*UnitDateInitial*: Data inicial da inquirição;
-    .*UnitDateFinal*: Data da última alteração da inquirição;
-    .*Repository*: String com o nome do repositório aonde está guardada a Inquirição
-    .*Creator*: String que guarda o nome do criador;
-    .*Relations*: Nomes de pessoas involvidas noutras inquirições relacionados com a que se está a analisar;
+Para as inquirições, implementamos as seguintes funcionalidades:
 
-Desta maneira, toda a informação de cada recurso é guardada na Base de Dados. O recurso em si é guardado usando o file system, na Base de Dados apenas ficam guardados os meta-dados do recurso.
+1. Adição de novas inquirições
+2. Edição de inquirições
+3. Eliminação de inquirições
+4. Consulta de inquirições
+5. Download de inquirições
 
-## Funcionalidades
+Adição de inquirições
+
+Na adição de novas inquirições, é feita uma verificação detalhada sobre a validade do mesmo:
+
+1. É verificado se o id da inquirição já existe na plataforma ou não;
+2. É verificado se o recurso é um zip ou não;
+3. É verificado se o recurso contém os ficheiros manifest.txt e PGDRE-SIP.json;
+4. É verificado se estes dois ficheiros são válidos ou não;
+5. É verificado se existem mais ficheiros para além dos dois referidos acima (é verificado se existe algum "conteúdo");
+
+Só depois do recurso passar a todas estas as validações é que este é adicionado à plataforma.
+
+## [Conclusão]
+
+Agora concluído o trabalho prático da Unidade Curricular de Engenharia Web, achamos que cumprimos com a totalidade dos objetivos propostos. Concluimos que mesmo com os desafios que tivemos na realização deste projeto ainda assim conseguimos aprender e reforçar vários conceitos ensinados em aula, e melhoramos a nossa organização e capacidades em construir interfaces e servidores utilizando vários tipos de ferramentes, tais como docker, jwt e outros.
+
+Acreditamos que o nosso projeto poderia servir como uma base sólida para algo orientado para o mundo real, sendo útil para ajudar profissionais a construir um trabalho útil, funcional e esteticamente apelativo.
+
+Concluindo, ficamos satisfeitos com o resultado final do nosso projeto e das coisas que aprendemos.

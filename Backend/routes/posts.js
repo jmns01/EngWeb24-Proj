@@ -5,18 +5,12 @@ import {verify_token, is_admin} from '../authorization/auth.js'
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/:id', (req, res) => {
     var page = parseInt(req.query.page) || 1;
     var limit = parseInt(req.query.limit) || 250;
     var skip = (page - 1) * limit;
 
-    posts.read_all(limit, skip)
-    .then(data => res.jsonp(data))
-    .catch(error => res.jsonp(error));
-})
-
-router.get('/:id', (req, res) => {
-    posts.read(req.params.id)
+    posts.read_all(req.params.id, limit, skip)
     .then(data => res.jsonp(data))
     .catch(error => res.jsonp(error));
 })

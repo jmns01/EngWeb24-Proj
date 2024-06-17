@@ -1,6 +1,8 @@
 import express from 'express'
 import controller from '../controllers/inquiries.js'
+import relations from '../controllers/relations.js'
 import {verify_token, is_admin} from '../authorization/auth.js'
+import { is_logged } from '../../Frontend/includes/permissions.js';
 
 const router = express.Router();
 
@@ -48,6 +50,18 @@ router.put('/:id', verify_token, (req, res) => {
 
 router.delete('/:id', is_admin, (req, res) => {
     controller.remove(req.params.id)
+    .then(() => res.sendStatus(204))
+    .catch(error => res.jsonp(error));
+})
+
+router.get('/:id/relations', (req, res) => {
+    relations.read_all(req.params.id)
+    .then(() => res.sendStatus(204))
+    .catch(error => res.jsonp(error));
+})
+
+router.post('/:id/relations', is_logged, (req, res) => {
+    relations.update(req.params.id, req.body)
     .then(() => res.sendStatus(204))
     .catch(error => res.jsonp(error));
 })

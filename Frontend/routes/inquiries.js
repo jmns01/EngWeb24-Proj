@@ -138,10 +138,10 @@ router.post('/edit', is_logged, function(req, res){
     })
 })
 
-router.get('/:id/relations/:relationid', is_logged, function(req, res){
+router.get('/:id/relations', is_logged, function(req, res){
     const user_data = retrieve_user_data(req.cookies.cookie_user_data)
     var date = new Date().toISOString().substring(0, 16);
-    axios.get(api + 'inquiries/' + req.params.id + '/relations/' + req.params.relationid)
+    axios.get(api + 'inquiries/' + req.params.id + '/relations')
     .then(response => {
         res.render('inquiries/relation', {
             user: user_data,
@@ -154,8 +154,8 @@ router.get('/:id/relations/:relationid', is_logged, function(req, res){
     })
 })
 
-router.post('/:id/relations/:relationid', is_logged, function(req, res){
-    axios.put(api + 'inquiries/' + req.params.id + '/relations/' + req.params.relationid, req.body)
+router.post('/:id/relations', is_logged, function(req, res){
+    axios.put(api + 'inquiries/' + req.params.id + '/relations', req.body)
     .then(response => {
         res.redirect('/inquiries/' + req.body.id + '/edit')
     })

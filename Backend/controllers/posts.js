@@ -1,11 +1,7 @@
 import model from '../models/posts.js'
 
-function read_all(limit, skip){
-    return model.find().sort({_id: 1}).skip(skip).limit(limit).exec();
-}
-
-function read(id){
-    return model.findOne({_id: id}).exec();
+function read_all(inquiry_id, limit, skip){
+    return model.find({inquiricaoId: inquiry_id}).sort({_id: 1}).skip(skip).limit(limit).exec();
 }
 
 function create(data){
@@ -21,4 +17,4 @@ function remove(){
     return model.findOneAndDelete({_id: id}).exec();
 }
 
-export default {read_all, read, create, update, remove}
+export default {read_all, create, update, remove}

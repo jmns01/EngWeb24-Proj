@@ -36,6 +36,14 @@ Esta arquitetura é construída por 3 servidores: **interfaceServer**, **apiServ
 
 Recebendo o ficheiro de dados em formato [.csv](https://github.com/jmns01/EngWeb24-Proj/blob/main/data/PT-UM-ADB-DIO-MAB-006.CSV) teríamos não só de o tratar como passar para [.json](colocar o link do db.json) e para isso utilizamos uma ***[script](https://github.com/jmns01/EngWeb24-Proj/blob/main/data/csv_json_parser.py)*** escrita na linguagem *python*, há semelhança do que já tínhamos feito em aulas da UC.
 
+### Script *analise.py*
+
+O arquivo **analise.py** contém um conjunto de funções para analisar um arquivo JSON e extrair valores únicos. Abaixo está uma descrição detalhada de suas funcionalidades:
+- São elas respetivamente:
+1. make_hashable: Converte listas em tuplas de forma recursiva para garantir que sejam "hashable" (ou seja, que possam ser usadas em conjuntos e como chaves de dicionários).
+2. list_unique_values: Lê um arquivo JSON, extrai valores únicos de cada campo do JSON e armazena esses valores únicos em um dicionário onde as chaves são os nomes dos campos e os valores são conjuntos de valores únicos.
+3. save_unique_values_to_json: Guarda o dicionário de valores únicos em um novo arquivo JSON.
+
 ## [API de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/apiServer)
 
 A resolução desta parte, à semelhança das outras, está de acordo com o feito nas aulas práticas. Sendo uma API de dados, serve principalmente para devolver os dados da base de dados de acordo com os vários critérios. Utilizando a base de dados guardada em mongoDB, utilizamos o módulo mongoose para conectarmo-nos à base de dados. De seguida, tratamos da criação dos [modelos](https://github.com/jmns01/EngWeb24-Proj/blob/main/apiServer/models/inquiricao.js) dos vários objetos da BD.

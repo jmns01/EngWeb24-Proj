@@ -16,7 +16,7 @@ Ao longo deste relatório vamos explicar o nosso raciocínio, as nossas interpre
 O relatório está dividido em 4 partes, cada uma das pastas deste repositório representa uma divisão do trabalho.
 
 - São elas respetivamente:
-1. [Estrutura/Arquitetura da plataforma]
+1. [Estrutura/Arquitetura da plataforma](https://github.com/jmns01/EngWeb24-Proj/blob/andre/arquitetura.png)
 2. [Tratamento de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/data)
 3. [API de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/apiServer)
 4. [Front-end](https://github.com/jmns01/EngWeb24-Proj/tree/main/interfaceServer)
@@ -52,9 +52,9 @@ A resolução desta parte, à semelhança das outras, está de acordo com o feit
 
 O interfaceServer é o principal servidor na plataforma por ser o servidor que conecta todas as outras componentes e também por ser o servidor que comunica diretamente com o utilizador.
 
-Este servidor trata de todos os pedidos do utilizador e usa como suporte os outros dois servidores (AUTH_SERVER e API_SERVER) para dar resposta aos pedidos do utilizador.
+Este servidor trata de todos os pedidos do utilizador e usa como suporte os outros dois servidores (authServer e apiServer) para dar resposta aos pedidos do utilizador.
 
-Mais concretamente, este servidor faz pedidos ao API_SERVER para obter informação sobre os recursos, as notícias e posts. Faz pedidos ao AUTH_SERVER para obter informação sobre os utilizadores para puder fazer várias coisas como autenticar utilizadores, editar os perfis e ter níveis de acesso diferentes para cada utilizador (admin, producer e consumer).
+Mais concretamente, este servidor faz pedidos ao apiServer para obter informação sobre as inquirições, os comentários e posts. Faz pedidos ao authServer para obter informação sobre os utilizadores para puder fazer várias coisas como autenticar utilizadores, editar os perfis e ter níveis de acesso diferentes para cada utilizador (admin e default).
 
 ## [Servidor de Autenticação](https://github.com/jmns01/EngWeb24-Proj/tree/main/authServer)
 

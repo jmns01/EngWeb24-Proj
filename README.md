@@ -28,6 +28,8 @@ O tema escolhido pelo nosso grupo foi o [Inquirições de Génere](colocar link 
 
 Esta arquitetura é construída por 3 servidores: **interfaceServer**, **apiServer** e **authServer**. Cada um serve um propósito bem definido e a comunicação entre eles é fundamental para conceber a plataforma pretendida.
 
+![estrutura](https://github.com/jmns01/EngWeb24-Proj/blob/andre/arquitetura.png)
+
 ## [Tratamento de dados](https://github.com/jmns01/EngWeb24-Proj/tree/main/data)
 
 ### Script *csv_json_parser.py*

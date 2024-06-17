@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Inquiricao = require('../controllers/inquiricoes');
+var auth = require('./auth.js')
 
 /* GET home page. */
 router.get('/getInquiricoesList', function(req, res, next) {
@@ -40,13 +41,13 @@ router.get('/getInquiricao/:id', function(req, res, next) {
     .catch(erro => res.status(500).send(erro));
 });
 
-router.put('/updateInquiricao/:id', function(req, res, next) {
+router.put('/updateInquiricao/:id', auth.verify_token, function(req, res, next) {
   Inquiricao.updateInquiricao(req.params.id, req.body)
     .then(dados => res.status(200).send(dados))
     .catch(erro => res.status(500).send(erro));
 });
 
-router.post('/addInquiricao', function(req, res, next) {
+router.post('/addInquiricao', auth.verify_token, function(req, res, next) {
   const defaultInquiricao = {
     _id: 0,
     DescriptionLevel: "",
@@ -148,25 +149,25 @@ router.post('/addInquiricao', function(req, res, next) {
   .catch(erro => res.status(500).send(erro));
 });
 
-router.delete('/deleteInquiricao/:id', function(req, res, next) {
+router.delete('/deleteInquiricao/:id', auth.is_admin, function(req, res, next) {
   Inquiricao.deleteInquiricao(req.params.id)
     .then(dados => res.status(200).send(dados))
     .catch(erro => res.status(500).send(erro));
 });
 
-router.delete('/deleteAllInquiricoes', function(req, res, next) {
+router.delete('/deleteAllInquiricoes', auth.is_admin, function(req, res, next) {
   Inquiricao.deleteAllInquiricoes()
     .then(dados => res.status(200).send(dados))
     .catch(erro => res.status(500).send(erro));
 });
 
-router.post('/addManyInquiricoes', function(req, res, next) {
+router.post('/addManyInquiricoes', auth.is_admin, function(req, res, next) {
   Inquiricao.addManyInquiricoes(req.body)
   .then(dados => res.status(200).send(dados))
   .catch(erro => res.status(500).send(erro));
 });
 
-router.get('/getRelations/:inquiricaoId/:relationsName', function(req, res, next) {
+router.get('/getRelations/:inquiricaoId/:relationsName', auth.is_admin, function(req, res, next) {
   const relationName = req.params.relationsName;
   Inquiricao.getRelation(req.params.inquiricaoId)
     .then(dados => {
@@ -176,18 +177,7 @@ router.get('/getRelations/:inquiricaoId/:relationsName', function(req, res, next
     .catch(erro => res.status(500).send(erro));
 });
 
-// REMOVER ISTO, N FAZ SENTIDO EDITAR RELAÇÕES
-router.put('/updateRelation/:inquiricaoId/:relationNome', function(req, res, next) {
-  Inquiricao.getIdByName(req.params.relationNome)
-  .then(dados => {const novo_id = dados._doc._id})
-  .catch(erro => res.status(500).send(erro));
-
-  Inquiricao.updateRelation(req.params.inquiricaoId, req.novo_id)
-    .then(dados => res.status(200).send(dados))
-    .catch(erro => res.status(500).send(erro));
-});
-
-router.get('/isIdValid/:id', function(req, res, next) {
+router.get('/isIdValid/:id', auth.verify_token, function(req, res, next) {
   Inquiricao.getInquiricaoById(req.params.id)
     .then(dados =>{
       if(dados != null){
@@ -199,7 +189,7 @@ router.get('/isIdValid/:id', function(req, res, next) {
     .catch(erro => res.status(500).send(erro));
 });
 
-router.post('/addRelation/:relationId/:inquiricaoId', function(req, res, next) {
+router.post('/addRelation/:relationId/:inquiricaoId', auth.is_admin, function(req, res, next) {
   const re = new RegExp('Inquirição de genere de ', 'i');
   let nome;
 
@@ -215,7 +205,7 @@ router.post('/addRelation/:relationId/:inquiricaoId', function(req, res, next) {
   .catch(erro => res.status(500).send(erro));
 });
 
-router.delete('/deleteRelation/:inquiricaoId/:relationName', function(req, res, next) {
+router.delete('/deleteRelation/:inquiricaoId/:relationName', auth.is_admin, function(req, res, next) {
   Inquiricao.removeRelation(req.params.inquiricaoId, req.params.relationName)
     .then(dados => res.status(200).send(dados))
     .catch(erro => res.status(500).send(erro));

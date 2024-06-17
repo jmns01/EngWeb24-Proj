@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Post = require('../controllers/posts');
+var auth = require('./auth.js')
 
 router.get('/getPostsList', function(req, res, next) {
     var page = parseInt(req.query.page) || 1;
@@ -22,13 +23,13 @@ router.get('/getAllPosts', function(req, res, next) {
     .catch(erro => res.status(500).send(erro));
 });
 
-router.delete('/deleteAllPosts', function(req, res, next) {
+router.delete('/deleteAllPosts', auth.is_admin, function(req, res, next) {
     Post.deleteAll()
     .then(dados => res.status(200).send(dados))
     .catch(erro => res.status(500).send(erro));
 });
 
-router.post('/addManyPosts', function(req, res, next) {
+router.post('/addManyPosts', auth.is_admin, function(req, res, next) {
     Post.addManyPosts(req.body)
     .then(dados => res.status(200).send(dados))
     .catch(erro => res.status(500).send(erro));
@@ -53,7 +54,7 @@ router.get('/getMaxId', function(req, res) {
     });
 });
 
-router.post('/addPost/:id', function(req, res, next) {
+router.post('/addPost/:id', auth.verify_token, function(req, res, next) {
     console.log(req.body);
     if(req.params.id){
         Post.addPost(req.params.id, req.body)
@@ -64,7 +65,7 @@ router.post('/addPost/:id', function(req, res, next) {
     }
 });
 
-router.delete('/removePost/:postId/:inquiricaoId', function(req, res, next) {
+router.delete('/removePost/:postId/:inquiricaoId', auth.is_admin, function(req, res, next) {
     if(req.params.postId && req.params.inquiricaoId){
         Post.removePost(req.params.postId, req.params.inquiricaoId)
         .then(dados => res.status(200).send(dados))
@@ -74,7 +75,7 @@ router.delete('/removePost/:postId/:inquiricaoId', function(req, res, next) {
     }
 });
 
-router.post('/addComment/:id', function(req, res, next) {
+router.post('/addComment/:id', auth.verify_token, function(req, res, next) {
     if(req.params.id){
         Post.addComment(req.params.id, req.body)
         .then(dados => res.status(200).send(dados))

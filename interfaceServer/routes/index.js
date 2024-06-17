@@ -11,6 +11,8 @@ var multer = require('multer');
 var upload = multer({dest: 'uploads'})
 const Ajv = require('ajv');
 
+var permissions = require('./permissions.js')
+
 // Coisas para upload de ficheiros
 const ajv = new Ajv();
 
@@ -20,29 +22,6 @@ const schema = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
 const validate = ajv.compile(schema);
 
 //router.use(bodyParser.urlencoded({ extended: true }));
-
-// Configuração do express-session
-router.use(session({
-  secret: 'EW2024',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Defina como true se estiver usando HTTPS
-}));
-
-function verificaToken(req, res, next) {
-  if (req.cookies && req.cookies.token) {
-    jwt.verify(req.cookies.token, "EW2024", function (e, payload) {
-      if (e) {// Erro na validação do token
-        res.render('error', { error: "O token do pedido não é válido...", token: false });
-      } else { // Só avança se existir um token e se este for verificado com sucesso
-        req.user = payload; // Informações do user -> req.user
-        next();
-      }
-    });
-  } else { // Não existe token
-    res.render('error', { error: "O pedido não tem um token...", token: false });
-  }
-}
 
 /* GET Página principal */
 router.get('/home', function(req, res){
@@ -140,7 +119,7 @@ router.get('/addInquiricao', function(req, res){
   });
 });
 
-router.post('/addInquiricao', function(req, res){
+router.post('/addInquiricao', permissions.is_logged, function(req, res){
   const {id, descLevel, unitId, repoCod, coutryCod, title, initDate, endDate, repo, scopeContent, cotaAtual, cotaAntiga, revised, publish, available, creator, created, creatorUsername} = req.body
   const newrevised = revised === "Sim" ? true : false;
   const newpublish = publish === "Sim" ? true : false;
@@ -156,7 +135,7 @@ router.post('/addInquiricao', function(req, res){
   });
 });
 
-router.get('/deleteInquiricao/:id', function(req, res){
+router.get('/deleteInquiricao/:id', permissions.is_admin, function(req, res){
   axios.delete(`http://localhost:7777/deleteInquiricao/${req.params.id}`)
   .then(response => {
     console.log('Inquirição eliminada com sucesso');
@@ -168,7 +147,7 @@ router.get('/deleteInquiricao/:id', function(req, res){
   });
 });
 
-router.get('/editInquiricao/:id', function(req, res){
+router.get('/editInquiricao/:id', permissions.is_admin, function(req, res){
   var d = new Date().toISOString().substring(0, 16);
   axios.get(`http://localhost:7777/getInquiricao/${req.params.id}`)
   .then(resp => {
@@ -181,7 +160,7 @@ router.get('/editInquiricao/:id', function(req, res){
   });
 });
 
-router.post('/editInquiricao/:id', function(req, res){
+router.post('/editInquiricao/:id', permissions.is_admin, function(req, res){
   const {id, descLevel, unitId, repoCod, coutryCod, title, initDate, endDate, repo, scopeContent, cotaAtual, cataAntiga, revised, publish, available, creator, created, creatorUsername} = req.body;
   const newrevised = revised === "Sim" ? true : false;
   const newpublish = publish === "Sim" ? true : false;
@@ -198,36 +177,7 @@ router.post('/editInquiricao/:id', function(req, res){
   });
 });
 
-// REMOVER
-router.get('/editRelation/:inquiricaoId/:relationNome', function(req, res){
-  var d = new Date().toISOString().substring(0, 16);
-  axios.get(`http://localhost:7777/getRelations/${req.params.inquiricaoId}/${req.params.relationNome}`)
-  .then(resp => {
-    var inquiricao = resp.data;
-    const key = Object.keys(inquiricao)[0];
-    const value = Object.values(inquiricao)[0];
-    res.status(200).render("editRelation", {type: "Administrador", userName: "jmns", nome: key, id: value, inquiricaoId : req.params.inquiricaoId, relationId: req.params.relationNome, date: d})
-  })
-  .catch(erro => {
-    console.log('Erro na obtenção da inquiricao: ' + erro);
-    res.status(500).render("error", {error: erro});
-  });
-});
-// REMOVER
-router.post('/editRelation/:inquiricaoId/:relationNome', function(req, res){
-  const {nome, id} = req.body;
-  axios.put(`http://localhost:7777/updateRelation/${req.params.inquiricaoId}/${req.params.relationNome}`, {key: nome, value: id})
-  .then(response => {
-    console.log('Relação atualizada com sucesso');
-    res.redirect(`/editRelation/${req.params.inquiricaoId}/${req.params.relationId}`);
-  })
-  .catch(error => {
-    console.error('Erro ao atualizar relação:', error);
-    res.redirect(`/editRelation/${req.params.inquiricaoId}/${req.params.relationId}`);
-  });
-});
-
-router.get('/downloadData', function(req, res) {
+router.get('/downloadData', permissions.is_admin, function(req, res) {
   let inquiricoes = [];
   let posts = [];
   let users = [];
@@ -284,7 +234,7 @@ router.get('/downloadData', function(req, res) {
     });
 });
 
-router.get('/uploadDataPage', function(req, res) {
+router.get('/uploadDataPage', permissions.is_admin, function(req, res) {
   var d = new Date().toISOString().substring(0, 16);
   res.status(200).render('uploadPage', {type : "Administrador", userName : "jmns", date: d});
 });
@@ -371,7 +321,7 @@ router.get('/test/:id', function(req, res){
   .catch(error => console.log(error))
 });
 
-router.get('/deleteRelation/:inquiricaoId/:relationNome', function(req, res){
+router.get('/deleteRelation/:inquiricaoId/:relationNome', permissions.is_admin, function(req, res){
   axios.delete(`http://localhost:7777/deleteRelation/${req.params.inquiricaoId}/${req.params.relationNome}`)
   .then(response => {
     console.log('Relação eliminada com sucesso');
@@ -415,7 +365,7 @@ router.get('/addPost/:id', function(req, res){
   });
 });
 
-router.post('/addPost/:id', function(req, res){
+router.post('/addPost/:id', permissions.is_logged, function(req, res){
   const post_id = req.body.post_id; 
   const title = req.body.Title;
   const content = req.body.Description;
@@ -440,7 +390,7 @@ router.post('/addPost/:id', function(req, res){
   });
 });
 
-router.get('/posts/deletePost/:post_id/:inquiricaoId', function(req, res){
+router.get('/posts/deletePost/:post_id/:inquiricaoId', permissions.is_admin, function(req, res){
   axios.delete(`http://localhost:7777/posts/removePost/${req.params.post_id}/${req.params.inquiricaoId}`)
   .then(resp => {
     res.status(200).redirect(`/posts/${req.params.inquiricaoId}`);
@@ -465,7 +415,7 @@ router.get('/posts/getComments/:post_id/:inquiricaoId', function(req, res){
   });
 });
 
-router.post('/posts/addComments/:post_id/:inquiricaoId', function(req, res){
+router.post('/posts/addComments/:post_id/:inquiricaoId', permissions.is_logged,function(req, res){
   const author = req.body.Autor;
   const titulo = req.body.Title;
   const desc = req.body.Description;
@@ -487,7 +437,7 @@ router.post('/posts/addComments/:post_id/:inquiricaoId', function(req, res){
 });
 
 /* GET Página de opções para o Admin */
-router.get('/moreOptions', function(req, res){
+router.get('/moreOptions', permissions.is_admin, function(req, res){
   var d = new Date().toISOString().substring(0, 16);
   if(req.cookies && req.cookies.token){
     jwt.verify(req.cookies.token, "EW2024", function(e, payload){
@@ -506,12 +456,12 @@ router.get('/moreOptions', function(req, res){
   }
 });
 
-router.get('/addAdmin', function(req, res){
+router.get('/addAdmin', permissions.is_admin, function(req, res){
   var d = new Date().toISOString().substring(0, 16);
   res.status(200).render('addAdmin', {date: d});
 });
 
-router.get('/gerirContas', function(req, res){
+router.get('/gerirContas', permissions.is_admin, function(req, res){
   var d = new Date().toISOString().substring(0, 16);
   axios.get('http://localhost:7778/users/get')
   .then(users => {
@@ -524,7 +474,7 @@ router.get('/gerirContas', function(req, res){
   });
 });
 
-router.get('/editUser/:username', function(req, res){
+router.get('/editUser/:username', permissions.is_admin, function(req, res){
   var d = new Date().toISOString().substring(0, 16);
   axios.get(`http://localhost:7778/users/get/${req.params.username}`)
   .then(user =>
@@ -536,7 +486,7 @@ router.get('/editUser/:username', function(req, res){
   });
 });
 
-router.post('/editUser/:username', function(req, res){
+router.post('/editUser/:username', permissions.is_admin, function(req, res){
   const {id, name, username, password, level, dateCreated, lastAccess} = req.body;
   console.log(req.body);
   axios.put(`http://localhost:7778/users/edit/user/${req.params.username}`, {_id: id, name: name, username: username, password: password, level: level, dateCreated: dateCreated, lastAccess: lastAccess, active: true})
@@ -554,7 +504,12 @@ router.get('/login', function (req, res) {
   var data = new Date().toISOString().substring(0, 16);
   var error = req.session.error;
   req.session.error = null; // Limpa a mensagem de erro após ser exibida
-  res.render('login', { d: data, error: error });
+  const cookie_user_data = req.cookies.cookie_user_data
+  if(cookie_user_data){
+      res.redirect('/')
+  }else{
+      res.render('login', { d: data, error: error })
+  }
 });
 
 router.post('/login', function (req, res) {
@@ -562,10 +517,10 @@ router.post('/login', function (req, res) {
 
   axios.post(`http://localhost:7778/users/login`, {params: {username: username, password: password}})
   .then(response => {
-    if(user){
-      const token = jwt.sign({username: user.username}, "EW2024");
-      res.cookie('token', token);
-      res.redirect('/getInquiricoesList');
+    if(response.status == 200){
+      axios.defaults.headers.common['Authorization'] = response.data.token
+      res.cookie('cookie_user_data', response.data)
+      res.redirect('/getInquiricoesList')
     }else{
       req.session.error = 'Username ou password incorretos.';
       res.redirect('/login');
@@ -604,41 +559,36 @@ router.post('/login', function (req, res) {
 
 router.get('/register', function(req, res){
   var data = new Date().toISOString().substring(0,16) 
-  res.render('registo', {d: data})
+  const cookie_user_data = req.cookies.cookie_user_data
+  if(cookie_user_data){
+      res.redirect('/')
+  }else{
+      res.render('register', {d: data})
+  }
 })
 
 router.post('/register', function(req, res){
   console.log(req.body);
-  if(req.query.admin){
-    var level = "Administrador";
-    const {name, username, password} = req.body;
-    axios.post('http://localhost:7778/users/register', {name: name, username: username, password: password, level: level})
-    .then(response => {
-      console.log('Utilizador registado com sucesso');
-      res.redirect('/login');
-    })
-    .catch(error => {
-      console.error('Erro ao registar utilizador:', error);
-      res.redirect('/register');
-    });
-  }
-  else{
-    const {name, username, password, level} = req.body;
-    axios.post('http://localhost:7778/users/register', {name: name, username: username, password: password, level: level})
-    .then(response => {
-      console.log('Utilizador registado com sucesso');
-      res.redirect('/login');
-    })
-    .catch(error => {
-      console.error('Erro ao registar utilizador:', error);
-      res.redirect('/register');
-    });
-  }
+  const {name, username, password} = req.body;
+  axios.post('http://localhost:7778/users/register', {name: name, username: username, password: password})
+  .then(response => {
+    if(response.status == 200){
+      axios.defaults.headers.common['Authorization'] = response.data.token
+      res.cookie('cookie_user_data', response.data)
+      res.redirect('/')
+    }else{
+      res.render('error', {message: response.message})
+    }
+  })
+  .catch(error => {
+    console.error('Erro ao registar utilizador:', error);
+    res.redirect('/register');
+  });
 });
 
 router.get('/logout', function(req, res){
-  res.clearCookie('token');
-  res.redirect('/home');
+  res.clearCookie('cookie_user_data')
+  res.redirect('/home')
 });
 
 module.exports = router;

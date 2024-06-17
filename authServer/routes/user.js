@@ -7,7 +7,7 @@ var auth = require('../auth/auth')
 
 var User = require('../controllers/user')
 
-router.get('/get', function(req, res){
+router.get('/get', auth.is_admin, function(req, res){
   User.list()
     .then(users => {
       res.status(200).jsonp(users)
@@ -15,7 +15,7 @@ router.get('/get', function(req, res){
     .catch(erro => res.status(502).jsonp({error: "Erro na obtenção da lista de users: " + erro}))
 })
 
-router.get('/getAllUsers', function(req, res){
+router.get('/getAllUsers', auth.is_admin, function(req, res){
   User.getAllUsers()
     .then(users => {
       res.status(200).jsonp(users)
@@ -23,7 +23,7 @@ router.get('/getAllUsers', function(req, res){
     .catch(erro => res.status(500).jsonp({error: "Erro na obtenção da lista de users: " + erro}))
 });
 
-router.get('/deleteAllUsers', function(req, res){
+router.get('/deleteAllUsers', auth.is_admin, function(req, res){
   User.deleteAllUsers()
     .then(users => {
       res.status(200).jsonp(users)
@@ -31,7 +31,7 @@ router.get('/deleteAllUsers', function(req, res){
     .catch(erro => res.status(500).jsonp({error: "Erro na obtenção da lista de users: " + erro}))
 });
 
-router.post('/addManyUsers', function(req, res){
+router.post('/addManyUsers', auth.is_admin, function(req, res){
   User.addManyUsers(req.body)
     .then(users => {
       res.status(200).jsonp(users)
@@ -39,7 +39,7 @@ router.post('/addManyUsers', function(req, res){
     .catch(erro => res.status(500).jsonp({error: "Erro na adição de users: " + erro}))
 });
 
-router.get('/get/:username', function(req, res){
+router.get('/get/:username', auth.verify_token, function(req, res){
   User.getUser(req.params.username)
     .then(user => {
       res.status(200).jsonp(user)
@@ -47,7 +47,7 @@ router.get('/get/:username', function(req, res){
     .catch(erro => res.status(501).jsonp({error: "Erro na obtenção do user: " + erro}))
 })
 
-router.put('/edit/user/:username', function(req, res){
+router.put('/edit/user/:username', auth.verify_token, function(req, res){
   User.updateUser(req.body)
     .then(user => {
       res.status(200).jsonp(user)
@@ -55,7 +55,7 @@ router.put('/edit/user/:username', function(req, res){
     .catch(erro => res.status(503).jsonp({error: "Erro na edição do user: " + erro}))
 })
 
-router.post('/register',auth.verificaAcesso,function(req, res) {
+router.post('/register',function(req, res) {
   var d = new Date().toISOString().substring(0,19)
   userModel.register(new userModel({ email: req.body.email, name: req.body.name,
                                      username: req.body.username, level: req.body.level,
@@ -122,7 +122,7 @@ router.post('/login', function(req, res, next) {
     });
   })(req, res, next);
 });
-router.delete('/delete/user/:username',auth.verificaAcesso,function(req,res){
+router.delete('/delete/user/:username', auth.is_admin,function(req,res){
   User.deleteUser(req.params.username)
     .then(dados => res.jsonp(dados))
     .catch(erro => res.status(605).json({erro:erro}))

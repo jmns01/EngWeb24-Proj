@@ -56,3 +56,9 @@ module.exports.addComment = (postId, comment) => {
         )
         .exec();
 }
+
+module.exports.removePost = (postId, inqId) => {
+    return Post
+        .deleteOne({_id: postId, inquiricaoId: inqId})
+        .exec();
+}

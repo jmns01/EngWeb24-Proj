@@ -1,0 +1,135 @@
+extends layout
+
+block content
+    .w3-card-4
+        header.w3-container.w3-blue
+            .w3-bar.w3-border-bottom
+                .w3-bar-item
+                    h2 #[b Trabalho Prático de EngWeb2024]
+                if type == "Not logged"
+                    a.w3-bar-item.w3-button.w3-right(href="/login" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-sign-in-alt(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Login]
+                else
+                    a.w3-bar-item.w3-button(href="/home" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-home(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Início]
+                    a.w3-bar-item.w3-button(href="/getInquiricoesList" style="position:relative; top:10px;")
+                        .w3-cell-row
+                            .w3-cell
+                                i.fa.fa-folder-open(style="color: #000000;")
+                            .w3-cell(style="width:80%")
+                                h6 #[b Lista de Inquirições]
+                    if type == "Administrador"
+                        a.w3-bar-item.w3-button(href="/moreOptions" style="position:relative; top:10px;")
+                            .w3-cell-row
+                                .w3-cell
+                                    i.fa.fa-cog(style="color: #000000;")
+                                .w3-cell(style="width:80%")
+                                    h6 #[b Mais Opções]
+                    .w3-bar-item.w3-right(style="display: flex; top:10px; justify-content: space-between; align-items: center;")
+                        h6 #{userName}&nbsp;&nbsp;
+                        a.w3-button(href="/logout" style="position:relative; top:1px; display: flex; align-items: center;")
+                            i.fa.fa-sign-out-alt(style="color: #000000;")
+                            h6 &nbsp;&nbsp;#[b Sair]
+            h3 &nbsp;&nbsp;&nbsp;#[b Editar um Registo de Inquirição]  
+    .w3-container  
+      form.w3-container(action=`/editInquiricao/${inquiricao._id}` method="POST")
+        fieldset 
+            legend Infos:
+
+            label Id 
+                input.w3-input(type="text" name="id" value=inquiricao._id readonly)
+                
+            label Nível de Descrição 
+                input.w3-input(type="text" name="descLevel" value=inquiricao.DescriptionLevel required)
+
+            label Código de Referência
+                input.w3-input(type="text" name="unitId" value=inquiricao.CompleteUnitId required)
+
+            label Código de Repositório 
+                input.w3-input(type="text" name="repoCod" value=inquiricao.RepositoryCode required)
+
+            label Código do País 
+                input.w3-input(type="text" name="coutryCod" value=inquiricao.CountryCode)
+
+            label Título da Unidade
+                input.w3-input(type='text' name='title' value=inquiricao.UnitTitle readonly required)
+
+            label Data Inicial da Unidade
+                input.w3-input(type='text' name='initDate' value=inquiricao.UnitDateInitial required)
+            
+            label Data Final da Unidade
+                input.w3-input(type='text' name='endDate' value=inquiricao.UnitDateFinal required)
+
+            label Repositório
+                input.w3-input(type='text' name='repo' value=inquiricao.Repository required)
+
+            label Âmbito e conteúdo
+                input.w3-input(type='text' name='scopeContent' value=inquiricao.ScopeContent)
+
+            label Cota Atual
+                input.w3-input(type='text' name='cotaAtual' value=inquiricao.PhysLoc)
+
+            label Cota Antiga
+                input.w3-input(type='text' name='cataAntiga' value=inquiricao.PreviousLoc)
+
+            label Revisão
+                input.w3-input(type='text' name='revised' value=(inquiricao.Revised ? 'Sim' : 'Não'))
+
+            label Publicada
+                input.w3-input(type='text' name='publish' value=(inquiricao.Published ? 'Sim' : 'Não'))
+
+            label Disponível
+                input.w3-input(type='text' name='available' value=(inquiricao.Available ? 'Sim' : 'Não'))
+        
+            label Criador/a
+                input.w3-input(type='text' name='creator' value=inquiricao.Creator required)
+
+            label Data de Criação
+                input.w3-input(type='text' name='created' value=inquiricao.Created required)
+            
+            label Username do Criador/a
+                input.w3-input(type='text' name='creatorUsername' value=inquiricao.Username required)
+
+        if inquiricao.Relations
+            fieldset 
+                table.w3-table-all
+                    tr
+                        th Pessoas Relacionadas
+                        th ID
+                        th Ações
+                    each rel in inquiricao.Relations
+                        tr
+                            td= rel.key
+                            td 
+                                a(href='/inquiricao/' + rel.value) #{rel.value}
+                            td
+                                .w3-panel
+                                    a(href='/deleteRelation/' + inquiricao._id + '/' + rel.key)
+                                        button.w3-button(type="button")
+                                            .w3-cell-row
+                                                .w3-cell
+                                                    i.fa.fa-trash-alt(style="color: #000000;")
+                                                .w3-cell(style="width:80%")
+                                                    h9 &nbsp;&nbsp; #[b Eliminar]
+    .w3-container
+        .w3-bar-item.w3-right(style="display: flex; top:10px; justify-content: space-between; align-items: center;")
+            button#addRelation.w3-button(onclick=`openAddrelationModal(${inquiricao._id})`)
+                i.fa.fa-plus(style="color: #000000;")
+                h6 &nbsp;&nbsp;#[b Adicionar Relação]
+
+        input.w3-btn.w3-blue.w3-margin(type="submit" value="Editar")
+
+        button#cancel.w3-btn.w3-round.w3-red.w3-margin
+          a(href="/getInquiricoesList") Voltar atrás
+
+    footer.w3-container.w3-blue.w3-center
+        h5 André Pimentel Filipe, David da Silva Teixeira, João Manuel Novais da Silva e João Henrique Costa Ferreira | Engenharia Web 2024 - Universidade do Minho
+        h5 Generado por EngWeb2024 in #{date}

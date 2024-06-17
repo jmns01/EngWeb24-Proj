@@ -38,46 +38,25 @@ block content
                         a.w3-button(href="/logout" style="position:relative; top:1px; display: flex; align-items: center;")
                             i.fa.fa-sign-out-alt(style="color: #000000;")
                             h6 &nbsp;&nbsp;#[b Sair]
-            h3 &nbsp;&nbsp;&nbsp;#[b Editar uma conta] 
+            h3 &nbsp;&nbsp;&nbsp;#[b Editar relações] 
     .w3-container  
-      form.w3-container(action=`/editUser/${user.username}` method="POST")
-        fieldset 
-            legend Infos:
-
-            label Id 
-                input.w3-input(type="text" name="id" value=user._id readonly)
-                
-            label Nome 
-                input.w3-input(type="text" name="name" value=user.name required)
-
-            label Username 
-                input.w3-input(type="text" name="username" value=user.username required)
-
-            label Password 
-                input.w3-input(type="password" name="password" value=user.password required)
-
-            label Data de Criação
-                input.w3-input(type='text' name='dateCreated' value=user.dateCreated readonly)
-
-            label Data de Último Acesso
-                input.w3-input(type='text' name='lastAccess' value=user.lastAccess readonly)
-        
-        fieldset 
-            legend Nível:
-            input(type='radio' name='level' value='Produtor' checked=(user.level === 'Produtor'))
-            |  Produtor
-            br
-            input(type='radio' name='level' value='Consumidor' checked=(user.level === 'Consumidor'))
-            |  Consumidor
-            if user.level === 'Administrador'
-                br
-                input(type='radio' name='level' value='Administrador' checked)
-                |  Administrador
+      form.w3-container(action=`/editRelation/${inquiricaoId}/${relationId}` method="POST") 
+        legend Relações:
+            table.w3-table-all
+                tr
+                    th Pessoas Relacionadas
+                    th ID
+                tr 
+                    td
+                        input.w3-input(type="text" name="relation" value=nome readonly)
+                    td
+                        input.w3-input(type="text" name="relationId" value=id)
+                        small Mude o Id da relação para editar a relação, o nome irá ser atualizado automaticamente
 
         input.w3-btn.w3-blue.w3-margin(type="submit" value="Editar")
 
         button#cancel.w3-btn.w3-round.w3-red.w3-margin
-          a(href="/home") Voltar atrás
+            a(href=`/editInquiricao/${inquiricaoId}`) Voltar atrás
 
       if erro != undefined
         .w3-panel.w3-yellow

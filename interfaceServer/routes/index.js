@@ -102,6 +102,108 @@ router.get('/getInquiricoesList', function (req, res, next) {
   }
 });
 
+router.get('/inquiricao/:id', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  axios.get(`http://localhost:7777/getInquiricao/${req.params.id}`)
+  .then(resp => {
+    var inquiricao = resp.data;
+    res.status(200).render("inquiricao", {type: "Administrador", userName: "jmns", inquiricao: inquiricao, date: d})
+  })
+  .catch(erro => {
+    console.log('Erro na obtenção da inquiricao: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.get('/deleteInquiricao/:id', function(req, res){
+  axios.delete(`http://localhost:7777/deleteInquiricao/${req.params.id}`)
+  .then(response => {
+    console.log('Inquirição eliminada com sucesso');
+    res.redirect('/getInquiricoesList');
+  })
+  .catch(error => {
+    console.error('Erro ao eliminar inquirição:', error);
+    res.redirect('/getInquiricoesList');
+  });
+});
+
+router.get('/editInquiricao/:id', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  axios.get(`http://localhost:7777/getInquiricao/${req.params.id}`)
+  .then(resp => {
+    var inquiricao = resp.data;
+    res.status(200).render("editInquiricao", {type: "Administrador", userName: "jmns", inquiricao: inquiricao, date: d})
+  })
+  .catch(erro => {
+    console.log('Erro na obtenção da inquiricao: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+
+router.post('/editInquiricao/:id', function(req, res){
+  const {id, descLevel, unitId, repoCod, coutryCod, title, initDate, endDate, repo, scopeContent, cotaAtual, cataAntiga, revised, publish, available, creator, created, creatorUsername} = req.body;
+  const newrevised = revised === "Sim" ? true : false;
+  const newpublish = publish === "Sim" ? true : false;
+  const newavailable = available === "Sim" ? true : false;
+
+  axios.put(`http://localhost:7777/updateInquiricao/${req.params.id}`, {DescriptionLevel: descLevel, CompleteUnitId: unitId, RepositoryCode: repoCod, CountryCode: coutryCod, UnitTitle: title, UnitDateInitial: initDate, UnitDateFinal: endDate, Repository: repo, ScopeContent: scopeContent, PhysLoc: cotaAtual, PreviousLoc: cataAntiga, Revised: newrevised, Published: newpublish, Available: newavailable, Creator: creator, Created: created, Username: creatorUsername})
+  .then(response => {
+    console.log('Inquirição atualizada com sucesso');
+    res.redirect(`/editInquiricao/${req.params.id}`);
+  })
+  .catch(error => {
+    console.error('Erro ao atualizar inquirição:', error);
+    res.redirect(`/editInquiricao/${req.params.id}`);
+  });
+});
+
+// REMOVER
+router.get('/editRelation/:inquiricaoId/:relationNome', function(req, res){
+  var d = new Date().toISOString().substring(0, 16);
+  axios.get(`http://localhost:7777/getRelations/${req.params.inquiricaoId}/${req.params.relationNome}`)
+  .then(resp => {
+    var inquiricao = resp.data;
+    const key = Object.keys(inquiricao)[0];
+    const value = Object.values(inquiricao)[0];
+    res.status(200).render("editRelation", {type: "Administrador", userName: "jmns", nome: key, id: value, inquiricaoId : req.params.inquiricaoId, relationId: req.params.relationNome, date: d})
+  })
+  .catch(erro => {
+    console.log('Erro na obtenção da inquiricao: ' + erro);
+    res.status(500).render("error", {error: erro});
+  });
+});
+// REMOVER
+router.post('/editRelation/:inquiricaoId/:relationNome', function(req, res){
+  const {nome, id} = req.body;
+  axios.put(`http://localhost:7777/updateRelation/${req.params.inquiricaoId}/${req.params.relationNome}`, {key: nome, value: id})
+  .then(response => {
+    console.log('Relação atualizada com sucesso');
+    res.redirect(`/editRelation/${req.params.inquiricaoId}/${req.params.relationId}`);
+  })
+  .catch(error => {
+    console.error('Erro ao atualizar relação:', error);
+    res.redirect(`/editRelation/${req.params.inquiricaoId}/${req.params.relationId}`);
+  });
+});
+
+router.get('/test/:id', function(req, res){
+  axios.get("http://localhost:7777/isIdValid/" + req.params.id)
+  .then(data => console.log(data.data))
+  .catch(error => console.log(error))
+});
+
+router.get('/deleteRelation/:inquiricaoId/:relationNome', function(req, res){
+  axios.delete(`http://localhost:7777/deleteRelation/${req.params.inquiricaoId}/${req.params.relationNome}`)
+  .then(response => {
+    console.log('Relação eliminada com sucesso');
+    res.redirect(`/editInquiricao/${req.params.inquiricaoId}`);
+  })
+  .catch(error => {
+    console.error('Erro ao eliminar relação:', error);
+    res.redirect(`/editInquiricao/${req.params.inquiricaoId}`);
+  });
+});
+
 router.get('/posts/:id', function(req, res){
   var d = new Date().toISOString().substring(0, 16);
   var page = parseInt(req.query.page) || 1;
@@ -135,14 +237,11 @@ router.get('/addPost/:id', function(req, res){
 });
 
 router.post('/addPost/:id', function(req, res){
-  console.log(req.body);
   const post_id = req.body.post_id; 
-  console.log(`POST ID: ${post_id}`);
   const title = req.body.Title;
   const content = req.body.Description;
   const inquiricaoId = req.params.id;
   const date = req.body.d; 
-  console.log(date);
   
   axios.post(`http://localhost:7777/posts/addPost/${req.params.id}`, {
     _id: post_id,
@@ -159,6 +258,17 @@ router.post('/addPost/:id', function(req, res){
   .catch(erro => {
     console.log('Erro na adição do post: ' + erro);
     res.status(500).render("error", { error: erro });
+  });
+});
+
+router.get('/posts/deletePost/:post_id/:inquiricaoId', function(req, res){
+  axios.delete(`http://localhost:7777/posts/removePost/${req.params.post_id}/${req.params.inquiricaoId}`)
+  .then(resp => {
+    res.status(200).redirect(`/posts/${req.params.inquiricaoId}`);
+  })
+  .catch(erro => {
+    console.log('Erro na eliminação do post: ' + erro);
+    res.status(500).render("error", {error: erro});
   });
 });
 

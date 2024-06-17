@@ -3,6 +3,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose')
+var cors = require('cors');
+
 
 
 var mongoDB = 'mongodb://127.0.0.1:27017/inquiricoes';
@@ -21,6 +23,8 @@ var postsRouter = require('./routes/posts');
 var usersRouter = require('./routes/users');
 
 var app = express();
+app.use(cors()); // FEITO PARA PERMITIR PEDIDOS DE OUTROS DOMÍNIOS
+
 
 app.use(logger('dev'));
 app.use(express.json());

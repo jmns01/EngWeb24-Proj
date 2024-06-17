@@ -42,3 +42,55 @@ module.exports.listByDate = (date, limit, skip) => {
         .limit(limit)
         .exec();
 }
+
+module.exports.getInquiricaoById = id => {
+    return Inquiricao
+        .findOne({_id: id})
+        .exec();
+}
+
+module.exports.updateInquiricao = (id, data) => {
+    return Inquiricao
+        .findOneAndUpdate({_id: id}, data, {new: true})
+}
+
+module.exports.deleteInquiricao = id => {
+    return Inquiricao
+        .deleteOne({_id: id})
+        .exec();
+}
+
+module.exports.getRelation = (id) => {
+    return Inquiricao
+        .findOne({_id: id}, {Relations: 1, _id: 0})
+        .exec()
+}
+
+module.exports.updateRelation = (id, data) => {
+    return Inquiricao
+        .findOneAndUpdate({_id: id}, data, {new: true})
+}
+
+module.exports.getIdByName = (name) => {
+    return Inquiricao
+        .findOne({UnitTitle: {$regex: 'Inquirição de genere de ' + name, $options: 'i'}})
+        .exec()
+}
+
+module.exports.getNameById = (id) => {
+    return Inquiricao
+        .findOne({_id: id}, {UnitTitle: 1, _id: 0})
+        .exec()
+}
+
+module.exports.insertNewRelation = (name, inqid, relid) => {
+    return Inquiricao
+        .findOneAndUpdate({_id: inqid}, {$push: {Relations: {key: name, value: relid}}})
+        .exec()
+}
+
+module.exports.removeRelation = (id, name) => {
+    return Inquiricao
+        .findOneAndUpdate({_id: id}, {$pull: {Relations: {key: name}}})
+        .exec()
+}

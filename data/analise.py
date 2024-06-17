@@ -25,10 +25,25 @@ def list_unique_values(json_filename):
 
     return unique_values
 
+def count_max_relations(json_filename):
+    with open(json_filename, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+
+    num_relations = {}
+
+    for entry in data:
+        if len(entry['Relations']) in num_relations.keys():
+            num_relations[len(entry['Relations'])] += 1
+        else:
+            num_relations[len(entry['Relations'])] = 1
+
+    return num_relations
+
 def save_unique_values_to_json(unique_values, output_filename):
     with open(output_filename, 'w', encoding='utf-8') as f:
         json.dump(unique_values, f, ensure_ascii=False, indent=4)
 
-unique_values = list_unique_values('inquiricoes.json')
-save_unique_values_to_json(unique_values, 'unique_values.json')
+#unique_values = list_unique_values('inquiricoes.json')
+#save_unique_values_to_json(unique_values, 'unique_values.json')
+print(count_max_relations('inquiricoes.json'))
 

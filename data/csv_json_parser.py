@@ -1,6 +1,7 @@
 import csv
 import json
 import re
+import queue
 
 def read_csv(filename : str) -> list:
     """
@@ -50,20 +51,57 @@ def fix_types(json_dic : dict) -> dict:
         new.append(elem)
     return new
 
+def get_higher_relations(json_dic : dict, id : int, name_to_id : dict) -> dict:
+    """
+    Analyses the 'ScopeContent' field which contains information regarding genealogical relationships of the person
+    """
+    names_pattern = re.compile(r'Filiação:((?:\s*\w{2,})+)(?:\s*e\s*((?:\s*\w{2,})+))?.')
+    new_relations = []
+
+    for doc in json_dic:
+        if doc["_id"] == id:
+            match = names_pattern.search(doc["ScopeContent"])
+            if not match:
+                print("Inquirição sem relações")
+            else:
+                for i in range(1, 3):
+                    if match.group(i):
+                        name = match.group(i).strip()
+                        relation_id = name_to_id.get(name, 0)
+                        if relation_id != 0:
+                            new_relations.append({"key" : name, "value" : relation_id})
+    return new_relations    
+
+def check_relations(relatiosArray : list, id : int) -> bool:
+    """
+    Checks if a certain id is already in the relations array
+    """
+    for rel in relatiosArray:
+        if rel["value"] == id:
+            return True
+    return False
+
 def make_relations(json_dic : dict) -> dict:
     """
     Analyses the 'ScopeContent' field which contains information regarding genealogical relationships of the person
     """
     names_pattern = re.compile(r'Filiação:((?:\s*\w{2,})+)(?:\s*e\s*((?:\s*\w{2,})+))?.')
+    temp_id = []
     
     name_to_id = {}
     for row in json_dic:
         name = row["UnitTitle"].lstrip("Inquirição de genere de").strip()
-        name_to_id[name] = row["_id"]
+        name = name.replace(" e ", ", ")
+        name = name.split(", ")
+        if len(name) == 1:
+            name_to_id[name[0]] = row["_id"]
+        else:
+            for n in name:
+                name_to_id[n] = row["_id"]
     
     for row in json_dic:
         elem = row
-        elem["Relations"] = {}
+        elem["Relations"] = []
         
         match = names_pattern.search(row["ScopeContent"])
         
@@ -75,9 +113,18 @@ def make_relations(json_dic : dict) -> dict:
                     name = match.group(i).strip()
                     relation_id = name_to_id.get(name, 0)
                     if relation_id != 0:
-                        elem["Relations"][name] = relation_id
-                    else: elem["Relations"][name] = 0
-        
+                        elem["Relations"].append({"key" : name, "value" : relation_id})
+                        temp_id.append(relation_id)
+                    while len(temp_id)>0:
+                        if len(new_relations := get_higher_relations(json_dic, temp_id.pop(0), name_to_id))>0:
+                            print("RECEBI RELAÇÕES" + str(new_relations))
+                            elem["Relations"] += (new_relations)
+                            for rel in new_relations:
+                                if rel and not check_relations(elem["Relations"], rel["value"]):
+                                    temp_id.append(rel["value"])
+                        #temp_id.pop(0)
+        temp_id.clear()
+                    
     return json_dic
 
 

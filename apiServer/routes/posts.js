@@ -46,6 +46,16 @@ router.post('/addPost/:id', function(req, res, next) {
     }
 });
 
+router.delete('/removePost/:postId/:inquiricaoId', function(req, res, next) {
+    if(req.params.postId && req.params.inquiricaoId){
+        Post.removePost(req.params.postId, req.params.inquiricaoId)
+        .then(dados => res.status(200).send(dados))
+        .catch(erro => res.status(500).send(erro));
+    }else{
+        res.status(400).send('Missing postId or inquiricaoId');
+    }
+});
+
 router.post('/addComment/:id', function(req, res, next) {
     if(req.params.id){
         Post.addComment(req.params.id, req.body)

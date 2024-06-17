@@ -16,7 +16,9 @@ router.get('/:id', function(req, res){
     .then(response => {
         if(response.status = 200){
             res.render('posts/list', {
+                inquiry_id: req.params.id,
                 user: user_data,
+                page: page,
                 posts: response.data,
                 date: date
             })
